@@ -1,0 +1,177 @@
+---
+layout:     post
+title:      “Golang about“
+subtitle:   “commonly used but with pitfalls about Golang“
+date:       2016-04-20 23:00:00
+author:     “carbine-gun”
+header-img: "img/post-bg-06.jpg"
+---
+
+<h3>DB查询不到数据</h3>
+
+<ul>
+    <li>对于DB查询不到数据.在<code>Golang</code>中是处理成error的.比如<code>pq</code>里处理<code>postgres</code>查询不到数据是一个<code>no rows in result set</code>的提示</li>
+</ul>
+
+<h3>function实现接口</h3>
+
+<ul>
+    <li>Golang中用interface来定义协议/约定。常见的实现是一个用struct来实现interface{}。这样的struct需要有这个struct的instance.那么这个instance就可以完成这个interface定义的功能。但是有些时候,我们并不一定要通过struct来实现interface{}。也可以通过function来实现interface{}.但是在Golang中func是gaoling标准库中的类型。所以要用给它binding新的方法.则需要定义一个新的类型(Golang中常见的实现方式.要修改一个已有的源码不在本项目中的type实现某接口带打到某个标准/函数参数要求的时候.基于这个已有的type做<code>type alias</code>即可
+
+        <ol>
+            <li>对于这样的实现。最常见的就是<code>http.Handler</code>接口.有一个经典的实现<code>http.HandlerFunc</code>.具体在<code>http</code>包中.它的实现是这样的</li>
+        </ol></li>
+</ul>
+
+<pre><code>type HandlerFunc func(ResponseWriter, \*Request)
+// ServeHTTP calls f(w, r).
+func (f HandlerFunc) ServeHTTP(w ResponseWriter, r  \*Request) {
+f(w, r)
+}
+</code></pre>
+
+<p>通过如上的方式.我们不再一定要让一个<code>struct</code>来实现接口。而是用函数实现接口。这样如果没有必要引入<code>struct</code>的时候.有时候用函数来实现接口能够让使用更简洁清楚。通过引入一个<code>HandlerFunc</code>之后。真正使用的代码就会变成这样</p>
+
+<pre><code>func HelloFunc(w http.ResponseWriter, r *http.Request) {
+    w.Write(([]byte)(&quot;ok!&quot;))
+}
+//在这个http.HandleFunc地下.会把用户定义的函数转化为一个HandlerFunc类型.因为它与HandlerFunc的函数签名完全一致。所以在Go里它是可以直接类型转换的。
+http.HandleFunc(&quot;/hello&quot;, HelloFunc) 
+</code></pre>
+
+<p>通过如上方式.提供一个外部更方便的接口<code>http.HandleFunc()</code>让用户提供一个跟新定义的<code>HandlerFunc</code>一样签名的函数。在底层因为用户提供的函数跟<code>HandlerFunc</code>完全一致。所以就能够直接转型为<code>HandlerFunc</code>这个类型.从而就从一个普通的函数编程了<code>http.Handler</code>的实现类型。就跟其他实现<code>Http.Handler</code>的<code>struct</code>一致的了。</p>
+
+<pre><code>//在http中对于HandlerFunc进来之后要先经历一次类型转换。
+func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter, *Request)) {
+    mux.Handle(pattern, HandlerFunc(handler)) //类型转换
+}
+//对于普通的handler的直接实现.http.Handle()也直接提供给用户。这样的调用传入之后就不再需要那步类型转换了。
+func Handle(pattern string, handler Handler) { DefaultServeMux.Handle(pattern, handler) }
+</code></pre>
+
+<p> 对于<code>http.HandlerFunc</code>还可以自己实例化一个具体的<code>HandlerFunc</code>然后传给<code>http.Handle</code>直接将其作为一个<code>http.Handler</code>来使用。</p>
+
+<pre><code>func SingleHost(handler http.Handler, allowedHost string) http.Handler {
+    ourFunc := func(w http.ResponseWriter, r *http.Request) {
+        host := r.Host
+        if host == allowedHost {
+            handler.ServeHTTP(w, r)
+        } else {
+            w.WriteHeader(403)
+        }
+    }
+    return http.HandlerFunc(ourFunc)
+}
+</code></pre>
+
+<ol>
+    <li>另一个经典实现是<code>expvar</code>(expose variable)这个package.
+
+        <p>比如对于处理<code>os.Args</code>这是默认的一个<code>package level variable</code>。而在输出的时候,<code>expvar</code>要输出的值是要实现一个<code>Var interface</code>的</p>
+
+        <p>type Var interface {</p>
+
+        <p>String() string</p>
+
+        <p>}</p></li>
+</ol>
+
+<p>对于具体的类型都是可以实现这个接口。但是有时候需要输出的值来自一个函数调用的结果。就可以定义一个函数.这个函数实现了这个接口。而这个函数类型可以由要输出值的函数的调用结果的值来作为要输出的值即可。这里是对于提供的<code>cmdline</code>,<code>memstats</code>都是这样的实现。具体可以见如下源码:</p>
+
+<pre><code>//实现接口的函数。用它作为跳板来进行输出
+type Func func() interface{} 
+func (f Func) String() string {
+    v, _ := json.Marshal(f())
+    return string(v)
+}
+//要用来输出值的函数
+func cmdline() interface{} {
+    return os.Args
+}
+//要用来输出值的函数
+func memstats() interface{} {
+    stats := new(runtime.MemStats)
+    runtime.ReadMemStats(stats)
+    return *stats
+}
+
+Publish(&quot;cmdline&quot;, Func(cmdline)) //类型转换让实际输出的函数变成实现接口的函数。这样就能输出了
+Publish(&quot;memstats&quot;, Func(memstats)) //类型转换让实际输出的函数变成实现接口的函数。这样就能输出了
+</code></pre>
+
+<h3>type alias or brand-new type</h3>
+
+<ol>
+    <li>在<code>golang</code>中,经常由于要使用现有的类型来操作。但是由于现有的type自己已经不能变更。所以好多时候就会有<code>type alias</code>来对现有的类型进行类型增强。但是还有一种方式是定义一个新的类型.把已有类型作为这个新类型的属性。这两种方式如何选择？
+
+        <ul>
+            <li>如果在实际的使用中.仅仅使用已有类型身上<code>bind</code>的方法。那么可以用<code>type alias</code>来实现。
+
+                <ul>
+                    <li>如果在使用过程中,会使用到已有类型作为参数传入别的函数进行判断。即:使用了别的函数.这个函数要原有的数据类型作为参数的时候.就可以考虑将原有的数据类型作为属性写入到一个新的<code>struct</code>中的方式。这样在使用的时候能够直接通过<code>.</code>操作来进行属性获取.简单而且易懂。但是这时候仍然可以用<code>type alias</code>的方式。这样的空间开销更小。在使用的时候就需要先做类型转型。因为<code>type alias</code>上做数据转型是完全安全的。所以不会有问题</li>
+                </ul></li>
+        </ul>
+
+        <p>综上，在使用场景上<code>type alias</code>的使用场景可能要更大一些。</p>
+
+        <p>具体有如下 <code>type alias</code>和建立一个新的<code>struct</code>方式</p></li>
+</ol>
+
+<pre><code>type MyInt struct {
+i int64
+}
+    func (obj MyInt) String() string {
+    return strconv.FormatInt(atomic.LoadInt64(&amp;obj.i), 10)
+}
+    type MyIntAlias int64
+    func (obj MyIntAlias) String() string {
+    return strconv.FormatInt(int64(obj), 10)
+    } 
+    func main() {
+    fmt.Printf(&quot;%q\n&quot;, MyInt{10})
+    fmt.Printf(&quot;%q\n&quot;, MyIntAlias(10))
+    }
+</code></pre>
+
+<h3>golang中的string输出</h3>
+
+<ol>
+    <li><code>golang</code>中的string输出.默认<code>fmt.Println</code>的输出是不带引号的。所以即便是string类型.输出到浏览器里.同样可能在展现上是没有引号的。看起来也不一定是string类型的输出。<code>expvar</code>包就利用了这个特性来输出自己的<code>exposed variables</code>. <code>expvar</code>提供的是 <code>String() string</code>但是对于在实现的过程中。输出到http response的时候。自己控制了值的输出。让各个类型的值在展现上还是最常见的形式。而没有把int等类型展现为string的形式。</li>
+</ol>
+
+<p>具体源码如下:</p>
+
+<pre><code>func expvarHandler(w http.ResponseWriter, r *http.Request) {
+w.Header().Set(&quot;Content-Type&quot;, &quot;application/json; charset=utf-8&quot;)
+fmt.Fprintf(w, &quot;{\n&quot;)
+first := true
+Do(func(kv KeyValue) {
+if !first {
+       fmt.Fprintf(w, &quot;,\n&quot;)
+ }
+ first = false
+//关键作用在这里的 %q 和%s. %q为所有的key都加上了引号。这是json的要求。
+//但是对于Value因为都实现了String() string。所以可以安全的使用%s.但是却没有强制加引号。保持了自己应有的输出样式未改变。trick！！！
+fmt.Fprintf(w, &quot;%q: %s&quot;, kv.Key, kv.Value)
+})
+fmt.Fprintf(w, &quot;\n}\n&quot;)
+}
+</code></pre>
+
+<h3>slice.</h3>
+
+<ul>
+    <li>slice的底层就是array.但是slice比array更常用，array是一个更低层次用来存储的数据。gaoling中array是<code>值</code>传递的。但是slice底层是array。在实际进行修改的时候slice传递的时候即便是slice本身是值传递。但是它本身是引用。它引用的数据还是底层的array。但是要注意的是slice在不断传递的过程中。底层的array可能发生扩容而不再是原来的array的问题。(这就是为什么调用append的时候.要传递原始的slice和新的slice.就是因为如果不接收新的那个slice。那么它可能已经不再是原来的那个slice了(引用的array已经变化)</li>
+    <li> slice在用make声明的时候。可以同时声明length和cap.cap不声明的时候就是跟length一样。注意的是要声明cap的常见意义在于:有可能操作的时候需要的cap会超过length，又不想多次内存分配浪费时间。就采用空间换时间的方式。实际底层的array内存是分配的cap。但是在这个slice目前使用的时候就只能使用到length。但是一旦要扩大slice的时候。就会利用到已有的array。这样就能够更快速。而不用做内存分配。如果length==cap。这时候要扩张slice。就需要涉及到内存分配+内容拷贝的时间开销。</li>
+    <li> <a href="http://blog.golang.org/go-slices-usage-and-internals">slice的内部机制</a></li>
+</ul>
+
+<h3>sync.Pool</h3>
+
+<ul>
+    <li><code>sync.Pool</code>中的对象会在每次GC的时候被强制清空.并不是看是否有引用被干掉，而是就直接清空Pool.(具体见:<code>sync/pool.go</code>中的<code>poolCleanup</code>)。这样pool中原来放入的对象就会都无效。再<code>Get</code>的时候就会需要在pool上的<code>New</code>来形成新的对象。</li>
+    <li><code>sync.Pool</code>中的元素<code>Get</code>的时候都是从pool中移除的，所以即便每次GC都从pool中移除所有的pooled objects，所以是没有问题的。就是有时候这样的方式会可能在GC之后再批量获取的时候，pool带来的性能优势就消失了。</li>
+</ul>
+
+</body>
+</html>
