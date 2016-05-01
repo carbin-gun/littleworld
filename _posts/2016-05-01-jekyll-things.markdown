@@ -7,8 +7,6 @@ author:     "carbin-gun"
 header-img: "img/post-bg-01.jpg"
 ---
 
-### Docs
-what is wrong here.
 ### Syntax
 A blog hosted by jekyll has its unique syntax structure especially for the header.If the syntax can't be parsed well,the parser will quit the parsing and the article display.
 
@@ -30,5 +28,3 @@ header-img: "img/post-bg-01.jpg"
 - the name of the article should follow the pattern of `yyyy-mm-dd-{article-name-delimeter-by-middle-line}`.
 -  jekyll blog system is to sequence all the articles in the filename date value mentioned above.if the date is the newest ,that article will be put at the top.
 - what's wrong here.
-
-
