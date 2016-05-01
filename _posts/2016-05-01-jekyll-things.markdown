@@ -21,7 +21,7 @@ date:       2016-05-01 12:00:00
 author:     "carbin-gun"
 header-img: "img/post-bg-01.jpg"
 ---
-{% highlight yaml  linenos %}
+{% endhighlight yaml  linenos %}
 
 
 
