@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      “Golang about“
+title:      "Golang about"
 subtitle:   “commonly used but with pitfalls about Golang“
 date:       2016-04-20 23:00:00
 author:     “carbine-gun”
