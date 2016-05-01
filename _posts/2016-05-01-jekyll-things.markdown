@@ -12,8 +12,8 @@ A blog hosted by jekyll has its unique syntax strcture.If the syntax can't be pa
 
 commonly used syntax for article abstract for example:
 
-```
-`
+``
+
 ---
 layout:     post
 title:      "jekyll blog things "
@@ -23,8 +23,8 @@ author:     "carbin-gun"
 header-img: "img/post-bg-01.jpg"
 ---
 
-```
-`
+``
+
 
 ### Naming
 - the name of the article should follow the pattern of `yyyy-mm-dd-{article-name-delimeter-by-middle-line}`
