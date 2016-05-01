@@ -30,9 +30,11 @@ header-img: "img/post-bg-01.jpg"
 ### Highlight
  jekyll's highlight uses the special code block.you should put your highlight-wanted part into a code block .you can even specify what you're highlighting,and show the line number by an option of `linenos`.
 
+{% highlight  %}
 > {% highlight %}
 > //contents you want to highlight
 > {% endhighlight %}
+{% endhighlight %}
 
 ### Jekyll docs
 > [http://jekyllcn.com/docs][1]
