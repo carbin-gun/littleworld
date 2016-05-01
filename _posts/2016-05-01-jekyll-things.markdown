@@ -21,6 +21,7 @@ header-img: "img/post-bg-01.jpg"
 ---
 ```
 `
+
 ### Naming
 - the name of the article should follow the pattern of `yyyy-mm-dd-{article-name-delimeter-by-middle-line}`
 -  jekyll blog system is to sequence all the articles in the filename date value mentioned above.if the date is the newest ,that article will be put at the top.
