@@ -8,7 +8,7 @@ header-img: "img/post-bg-01.jpg"
 ---
 
 ### Docs
-> http://jekyll.cn/docs
+what is wrong here.
 ### Syntax
 A blog hosted by jekyll has its unique syntax structure especially for the header.If the syntax can't be parsed well,the parser will quit the parsing and the article display.
 
