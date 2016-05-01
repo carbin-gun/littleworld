@@ -1,8 +1,8 @@
 ---
 layout:     post
-title:      " Write at  May Day of 2016 "  
-date:  2016-05-01 22:00:00
-author: "carbin-gun"
+title:      "May Day post."
+date:       2016-05-01 22:00:00
+author:     "carbin-gun"
 header-img: "img/post-bg-05.jpg"
 ---
 
