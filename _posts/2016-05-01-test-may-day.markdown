@@ -9,4 +9,8 @@ header-img: "img/post-bg-05.jpg"
 ### Hello ,May Day
 - How to spend this special day
 -  How to plan the future
-- "ok quotes"
+- See the future
+- work out for now
+- Java
+- Golang
+- Quotes problems
