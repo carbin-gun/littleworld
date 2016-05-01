@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.1.3">Jekyll</generator><link href="http://littleworld.me/feed.xml" rel="self" type="application/atom+xml" /><link href="http://littleworld.me/" rel="alternate" type="text/html" /><updated>2016-05-02T00:42:36+08:00</updated><id>http://littleworld.me/</id><title>Little World</title><subtitle>Little world,but if you explore,it can be beautiful</subtitle><entry><title>jekyll blog things</title><link href="http://littleworld.me/2016/05/01/jekyll-things/" rel="alternate" type="text/html" title="jekyll blog things " /><published>2016-05-01T20:00:00+08:00</published><updated>2016-05-01T20:00:00+08:00</updated><id>http://littleworld.me/2016/05/01/jekyll-things</id><content type="html" xml:base="http://littleworld.me/2016/05/01/jekyll-things/">&lt;h3&gt;Syntax&lt;/h3&gt;
+
+&lt;p&gt;A blog hosted by jekyll has its unique syntax structure especially for the header.If the syntax can&amp;#39;t be parsed well,the parser will quit the parsing and the article display.&lt;/p&gt;
+
+&lt;p&gt;commonly used syntax for article abstract for example:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;o&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;     &lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;      &lt;span class=&quot;s2&quot;&gt;&quot;jekyll blog things &quot;&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;subtitle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;   &lt;span class=&quot;s2&quot;&gt;&quot;pitfalls of jekyll blog.&quot;&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;       &lt;span class=&quot;mi&quot;&gt;2016&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;05&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;01&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;00&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;00&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;     &lt;span class=&quot;s2&quot;&gt;&quot;carbin-gun&quot;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;header&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;img/post-bg-01.jpg&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;---&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3&gt;Naming&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the name of the article should follow the pattern of &lt;code&gt;yyyy-mm-dd-{article-name-delimeter-by-middle-line}&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt; jekyll blog system is to sequence all the articles in the filename date value mentioned above.if the date is the newest ,that article will be put at the top.&lt;/li&gt;
+&lt;li&gt;what&amp;#39;s wrong here.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Docs&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://jekyllrb.com/docs/posts/&quot;&gt;https://jekyllrb.com/docs/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;Highlight&lt;/h3&gt;
+
+&lt;p&gt;the jekyll highlight should use the &lt;code&gt;Liquid tag&lt;/code&gt; called &lt;code&gt;highlight&lt;/code&gt;to do that work.&lt;/p&gt;
+
+&lt;h3&gt;Preview&lt;/h3&gt;
+
+&lt;p&gt;As for sometimes parse fault ,Putting all the things on live preview at local place is a good idea.Jekyll local preview is a simple task.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jekyll&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jekyll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;paginate&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;//ins&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tall&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;components&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;used&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;jekyll&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;serve&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;//i&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;will&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;watch&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;all&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;changes&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instantly&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;preview&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;all&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;changes&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;github&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>carbin-gun</name></author><summary>Syntax
+
+A blog hosted by jekyll has its unique syntax structure especially for the header.If the syntax can&amp;#39;t be parsed well,the parser will quit the parsing and the article display.</summary></entry><entry><title>“Golang about“</title><link href="http://littleworld.me/2016/04/21/golang-about/" rel="alternate" type="text/html" title="“Golang about“" /><published>2016-04-21T07:00:00+08:00</published><updated>2016-04-21T07:00:00+08:00</updated><id>http://littleworld.me/2016/04/21/golang-about</id><content type="html" xml:base="http://littleworld.me/2016/04/21/golang-about/">&lt;h3&gt;DB查询不到数据&lt;/h3&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;对于DB查询不到数据.在&lt;code&gt;Golang&lt;/code&gt;中是处理成error的.比如&lt;code&gt;pq&lt;/code&gt;里处理&lt;code&gt;postgres&lt;/code&gt;查询不到数据是一个&lt;code&gt;no rows in result set&lt;/code&gt;的提示&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;function实现接口&lt;/h3&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;Golang中用interface来定义协议/约定。常见的实现是一个用struct来实现interface{}。这样的struct需要有这个struct的instance.那么这个instance就可以完成这个interface定义的功能。但是有些时候,我们并不一定要通过struct来实现interface{}。也可以通过function来实现interface{}.但是在Golang中func是gaoling标准库中的类型。所以要用给它binding新的方法.则需要定义一个新的类型(Golang中常见的实现方式.要修改一个已有的源码不在本项目中的type实现某接口带打到某个标准/函数参数要求的时候.基于这个已有的type做&lt;code&gt;type alias&lt;/code&gt;即可
+
+        &lt;ol&gt;
+            &lt;li&gt;对于这样的实现。最常见的就是&lt;code&gt;http.Handler&lt;/code&gt;接口.有一个经典的实现&lt;code&gt;http.HandlerFunc&lt;/code&gt;.具体在&lt;code&gt;http&lt;/code&gt;包中.它的实现是这样的&lt;/li&gt;
+        &lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;type HandlerFunc func(ResponseWriter, \*Request)
+// ServeHTTP calls f(w, r).
+func (f HandlerFunc) ServeHTTP(w ResponseWriter, r  \*Request) {
+f(w, r)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过如上的方式.我们不再一定要让一个&lt;code&gt;struct&lt;/code&gt;来实现接口。而是用函数实现接口。这样如果没有必要引入&lt;code&gt;struct&lt;/code&gt;的时候.有时候用函数来实现接口能够让使用更简洁清楚。通过引入一个&lt;code&gt;HandlerFunc&lt;/code&gt;之后。真正使用的代码就会变成这样&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func HelloFunc(w http.ResponseWriter, r *http.Request) {
+    w.Write(([]byte)(&amp;quot;ok!&amp;quot;))
+}
+//在这个http.HandleFunc地下.会把用户定义的函数转化为一个HandlerFunc类型.因为它与HandlerFunc的函数签名完全一致。所以在Go里它是可以直接类型转换的。
+http.HandleFunc(&amp;quot;/hello&amp;quot;, HelloFunc) 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过如上方式.提供一个外部更方便的接口&lt;code&gt;http.HandleFunc()&lt;/code&gt;让用户提供一个跟新定义的&lt;code&gt;HandlerFunc&lt;/code&gt;一样签名的函数。在底层因为用户提供的函数跟&lt;code&gt;HandlerFunc&lt;/code&gt;完全一致。所以就能够直接转型为&lt;code&gt;HandlerFunc&lt;/code&gt;这个类型.从而就从一个普通的函数编程了&lt;code&gt;http.Handler&lt;/code&gt;的实现类型。就跟其他实现&lt;code&gt;Http.Handler&lt;/code&gt;的&lt;code&gt;struct&lt;/code&gt;一致的了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//在http中对于HandlerFunc进来之后要先经历一次类型转换。
+func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter, *Request)) {
+    mux.Handle(pattern, HandlerFunc(handler)) //类型转换
+}
+//对于普通的handler的直接实现.http.Handle()也直接提供给用户。这样的调用传入之后就不再需要那步类型转换了。
+func Handle(pattern string, handler Handler) { DefaultServeMux.Handle(pattern, handler) }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt; 对于&lt;code&gt;http.HandlerFunc&lt;/code&gt;还可以自己实例化一个具体的&lt;code&gt;HandlerFunc&lt;/code&gt;然后传给&lt;code&gt;http.Handle&lt;/code&gt;直接将其作为一个&lt;code&gt;http.Handler&lt;/code&gt;来使用。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func SingleHost(handler http.Handler, allowedHost string) http.Handler {
+    ourFunc := func(w http.ResponseWriter, r *http.Request) {
+        host := r.Host
+        if host == allowedHost {
+            handler.ServeHTTP(w, r)
+        } else {
+            w.WriteHeader(403)
+        }
+    }
+    return http.HandlerFunc(ourFunc)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+    &lt;li&gt;另一个经典实现是&lt;code&gt;expvar&lt;/code&gt;(expose variable)这个package.
+
+        &lt;p&gt;比如对于处理&lt;code&gt;os.Args&lt;/code&gt;这是默认的一个&lt;code&gt;package level variable&lt;/code&gt;。而在输出的时候,&lt;code&gt;expvar&lt;/code&gt;要输出的值是要实现一个&lt;code&gt;Var interface&lt;/code&gt;的&lt;/p&gt;
+
+        &lt;p&gt;type Var interface {&lt;/p&gt;
+
+        &lt;p&gt;String() string&lt;/p&gt;
+
+        &lt;p&gt;}&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;对于具体的类型都是可以实现这个接口。但是有时候需要输出的值来自一个函数调用的结果。就可以定义一个函数.这个函数实现了这个接口。而这个函数类型可以由要输出值的函数的调用结果的值来作为要输出的值即可。这里是对于提供的&lt;code&gt;cmdline&lt;/code&gt;,&lt;code&gt;memstats&lt;/code&gt;都是这样的实现。具体可以见如下源码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//实现接口的函数。用它作为跳板来进行输出
+type Func func() interface{} 
+func (f Func) String() string {
+    v, _ := json.Marshal(f())
+    return string(v)
+}
+//要用来输出值的函数
+func cmdline() interface{} {
+    return os.Args
+}
+//要用来输出值的函数
+func memstats() interface{} {
+    stats := new(runtime.MemStats)
+    runtime.ReadMemStats(stats)
+    return *stats
+}
+
+Publish(&amp;quot;cmdline&amp;quot;, Func(cmdline)) //类型转换让实际输出的函数变成实现接口的函数。这样就能输出了
+Publish(&amp;quot;memstats&amp;quot;, Func(memstats)) //类型转换让实际输出的函数变成实现接口的函数。这样就能输出了
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;type alias or brand-new type&lt;/h3&gt;
+
+&lt;ol&gt;
+    &lt;li&gt;在&lt;code&gt;golang&lt;/code&gt;中,经常由于要使用现有的类型来操作。但是由于现有的type自己已经不能变更。所以好多时候就会有&lt;code&gt;type alias&lt;/code&gt;来对现有的类型进行类型增强。但是还有一种方式是定义一个新的类型.把已有类型作为这个新类型的属性。这两种方式如何选择？
+
+        &lt;ul&gt;
+            &lt;li&gt;如果在实际的使用中.仅仅使用已有类型身上&lt;code&gt;bind&lt;/code&gt;的方法。那么可以用&lt;code&gt;type alias&lt;/code&gt;来实现。
+
+                &lt;ul&gt;
+                    &lt;li&gt;如果在使用过程中,会使用到已有类型作为参数传入别的函数进行判断。即:使用了别的函数.这个函数要原有的数据类型作为参数的时候.就可以考虑将原有的数据类型作为属性写入到一个新的&lt;code&gt;struct&lt;/code&gt;中的方式。这样在使用的时候能够直接通过&lt;code&gt;.&lt;/code&gt;操作来进行属性获取.简单而且易懂。但是这时候仍然可以用&lt;code&gt;type alias&lt;/code&gt;的方式。这样的空间开销更小。在使用的时候就需要先做类型转型。因为&lt;code&gt;type alias&lt;/code&gt;上做数据转型是完全安全的。所以不会有问题&lt;/li&gt;
+                &lt;/ul&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+
+        &lt;p&gt;综上，在使用场景上&lt;code&gt;type alias&lt;/code&gt;的使用场景可能要更大一些。&lt;/p&gt;
+
+        &lt;p&gt;具体有如下 &lt;code&gt;type alias&lt;/code&gt;和建立一个新的&lt;code&gt;struct&lt;/code&gt;方式&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;type MyInt struct {
+i int64
+}
+    func (obj MyInt) String() string {
+    return strconv.FormatInt(atomic.LoadInt64(&amp;amp;obj.i), 10)
+}
+    type MyIntAlias int64
+    func (obj MyIntAlias) String() string {
+    return strconv.FormatInt(int64(obj), 10)
+    } 
+    func main() {
+    fmt.Printf(&amp;quot;%q\n&amp;quot;, MyInt{10})
+    fmt.Printf(&amp;quot;%q\n&amp;quot;, MyIntAlias(10))
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;golang中的string输出&lt;/h3&gt;
+
+&lt;ol&gt;
+    &lt;li&gt;&lt;code&gt;golang&lt;/code&gt;中的string输出.默认&lt;code&gt;fmt.Println&lt;/code&gt;的输出是不带引号的。所以即便是string类型.输出到浏览器里.同样可能在展现上是没有引号的。看起来也不一定是string类型的输出。&lt;code&gt;expvar&lt;/code&gt;包就利用了这个特性来输出自己的&lt;code&gt;exposed variables&lt;/code&gt;. &lt;code&gt;expvar&lt;/code&gt;提供的是 &lt;code&gt;String() string&lt;/code&gt;但是对于在实现的过程中。输出到http response的时候。自己控制了值的输出。让各个类型的值在展现上还是最常见的形式。而没有把int等类型展现为string的形式。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;具体源码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func expvarHandler(w http.ResponseWriter, r *http.Request) {
+w.Header().Set(&amp;quot;Content-Type&amp;quot;, &amp;quot;application/json; charset=utf-8&amp;quot;)
+fmt.Fprintf(w, &amp;quot;{\n&amp;quot;)
+first := true
+Do(func(kv KeyValue) {
+if !first {
+       fmt.Fprintf(w, &amp;quot;,\n&amp;quot;)
+ }
+ first = false
+//关键作用在这里的 %q 和%s. %q为所有的key都加上了引号。这是json的要求。
+//但是对于Value因为都实现了String() string。所以可以安全的使用%s.但是却没有强制加引号。保持了自己应有的输出样式未改变。trick！！！
+fmt.Fprintf(w, &amp;quot;%q: %s&amp;quot;, kv.Key, kv.Value)
+})
+fmt.Fprintf(w, &amp;quot;\n}\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;slice.&lt;/h3&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;slice的底层就是array.但是slice比array更常用，array是一个更低层次用来存储的数据。gaoling中array是&lt;code&gt;值&lt;/code&gt;传递的。但是slice底层是array。在实际进行修改的时候slice传递的时候即便是slice本身是值传递。但是它本身是引用。它引用的数据还是底层的array。但是要注意的是slice在不断传递的过程中。底层的array可能发生扩容而不再是原来的array的问题。(这就是为什么调用append的时候.要传递原始的slice和新的slice.就是因为如果不接收新的那个slice。那么它可能已经不再是原来的那个slice了(引用的array已经变化)&lt;/li&gt;
+    &lt;li&gt; slice在用make声明的时候。可以同时声明length和cap.cap不声明的时候就是跟length一样。注意的是要声明cap的常见意义在于:有可能操作的时候需要的cap会超过length，又不想多次内存分配浪费时间。就采用空间换时间的方式。实际底层的array内存是分配的cap。但是在这个slice目前使用的时候就只能使用到length。但是一旦要扩大slice的时候。就会利用到已有的array。这样就能够更快速。而不用做内存分配。如果length==cap。这时候要扩张slice。就需要涉及到内存分配+内容拷贝的时间开销。&lt;/li&gt;
+    &lt;li&gt; &lt;a href=&quot;http://blog.golang.org/go-slices-usage-and-internals&quot;&gt;slice的内部机制&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;sync.Pool&lt;/h3&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;&lt;code&gt;sync.Pool&lt;/code&gt;中的对象会在每次GC的时候被强制清空.并不是看是否有引用被干掉，而是就直接清空Pool.(具体见:&lt;code&gt;sync/pool.go&lt;/code&gt;中的&lt;code&gt;poolCleanup&lt;/code&gt;)。这样pool中原来放入的对象就会都无效。再&lt;code&gt;Get&lt;/code&gt;的时候就会需要在pool上的&lt;code&gt;New&lt;/code&gt;来形成新的对象。&lt;/li&gt;
+    &lt;li&gt;&lt;code&gt;sync.Pool&lt;/code&gt;中的元素&lt;code&gt;Get&lt;/code&gt;的时候都是从pool中移除的，所以即便每次GC都从pool中移除所有的pooled objects，所以是没有问题的。就是有时候这样的方式会可能在GC之后再批量获取的时候，pool带来的性能优势就消失了。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/body&gt;
+&lt;/html&gt;&lt;/p&gt;</content><author><name>“carbine-gun”</name></author><summary>DB查询不到数据</summary></entry><entry><title>Preface Of Little World</title><link href="http://littleworld.me/2014/09/24/littleworld/" rel="alternate" type="text/html" title="Preface Of Little World" /><published>2014-09-24T20:00:00+08:00</published><updated>2014-09-24T20:00:00+08:00</updated><id>http://littleworld.me/2014/09/24/littleworld</id><content type="html" xml:base="http://littleworld.me/2014/09/24/littleworld/">&lt;p&gt;这是一个无知者无畏的世界,向着目标冲吧.&lt;/p&gt;
+
+&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+
+&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+
+&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+
+&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
+
+&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
+
+&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot;&gt;
+&lt;/a&gt;
+&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+
+&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+
+&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;</content><author><name>Start Bootstrap</name></author><summary>这是一个无知者无畏的世界,向着目标冲吧.</summary></entry><entry><title>I believe every human has a finite number of heartbeats. I don&amp;#39;t intend to waste any of mine.</title><link href="http://littleworld.me/2014/09/18/i-believe/" rel="alternate" type="text/html" title="I believe every human has a finite number of heartbeats. I don&#39;t intend to waste any of mine." /><published>2014-09-18T20:00:00+08:00</published><updated>2014-09-18T20:00:00+08:00</updated><id>http://littleworld.me/2014/09/18/i-believe</id><content type="html" xml:base="http://littleworld.me/2014/09/18/i-believe/">&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+
+&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+
+&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+
+&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+
+&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
+
+&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
+
+&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot;&gt;
+&lt;/a&gt;
+&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+
+&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+
+&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;</content><author><name>Start Bootstrap</name></author><summary>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.</summary></entry><entry><title>Science has not yet mastered prophecy</title><link href="http://littleworld.me/2014/08/24/science-has-not-yet-mastered-prophecy/" rel="alternate" type="text/html" title="Science has not yet mastered prophecy" /><published>2014-08-24T20:00:00+08:00</published><updated>2014-08-24T20:00:00+08:00</updated><id>http://littleworld.me/2014/08/24/science-has-not-yet-mastered-prophecy</id><content type="html" xml:base="http://littleworld.me/2014/08/24/science-has-not-yet-mastered-prophecy/">&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+
+&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+
+&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+
+&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+
+&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
+
+&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
+
+&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot;&gt;
+&lt;/a&gt;
+&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+
+&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+
+&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;</content><author><name>Start Bootstrap</name></author><summary>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.</summary></entry><entry><title>Failure is not an option</title><link href="http://littleworld.me/2014/07/08/failure-is-not-an-option/" rel="alternate" type="text/html" title="Failure is not an option" /><published>2014-07-08T20:00:00+08:00</published><updated>2014-07-08T20:00:00+08:00</updated><id>http://littleworld.me/2014/07/08/failure-is-not-an-option</id><content type="html" xml:base="http://littleworld.me/2014/07/08/failure-is-not-an-option/">&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+
+&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+
+&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+
+&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+
+&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
+
+&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
+
+&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot;&gt;
+&lt;/a&gt;
+&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+
+&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+
+&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;</content><author><name>Start Bootstrap</name></author><summary>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.</summary></entry><entry><title>The dreams of yesterday are the hopes of today and the reality of tomorrow.</title><link href="http://littleworld.me/2014/07/01/dreams/" rel="alternate" type="text/html" title="The dreams of yesterday are the hopes of today and the reality of tomorrow." /><published>2014-07-01T20:00:00+08:00</published><updated>2014-07-01T20:00:00+08:00</updated><id>http://littleworld.me/2014/07/01/dreams</id><content type="html" xml:base="http://littleworld.me/2014/07/01/dreams/">&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+
+&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+
+&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+
+&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+
+&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
+
+&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
+
+&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot;&gt;
+&lt;/a&gt;
+&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+
+&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+
+&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;</content><author><name>Start Bootstrap</name></author><summary>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.</summary></entry><entry><title>Dinosaurs are extinct today</title><link href="http://littleworld.me/2014/06/10/dinosaurs/" rel="alternate" type="text/html" title="Dinosaurs are extinct today" /><published>2014-06-10T20:00:00+08:00</published><updated>2014-06-10T20:00:00+08:00</updated><id>http://littleworld.me/2014/06/10/dinosaurs</id><content type="html" xml:base="http://littleworld.me/2014/06/10/dinosaurs/">&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+
+&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+
+&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+
+&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+
+&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
+
+&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
+
+&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot;&gt;
+&lt;/a&gt;
+&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+
+&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+
+&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;</content><author><name>Start Bootstrap</name></author><summary>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.</summary></entry></feed>
