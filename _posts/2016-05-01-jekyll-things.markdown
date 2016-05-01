@@ -23,21 +23,21 @@ header-img: "img/post-bg-01.jpg"
 ---
 {% endhighlight %}
 
+
+### Naming
+- the name of the article should follow the pattern of `yyyy-mm-dd-{article-name-delimeter-by-middle-line}`.
+-  jekyll blog system is to sequence all the articles in the filename date value mentioned above.if the date is the newest ,that article will be put at the top.
+
+### Jekyll docs
+> [http://jekyllcn.com/docs][1]
+
 ### Highlight
- jekyll's highlight uses the special code block.you should put your highlight-wanted part into a code block .you can even specify what you're highlighting,and show the line number by an option of `linenos`.
+ jekyll's highlight uses the special code block.you should put your highlight-wanted part into a code block . you can even specify what you're highlighting,and show the line number by an option of `linenos`.
 
 {% highlight  %}
 > {% highlight %}
 > //contents you want to highlight
 > {% endhighlight %}
 {% endhighlight %}
-
-### Naming
-- the name of the article should follow the pattern of `yyyy-mm-dd-{article-name-delimeter-by-middle-line}`.
--  jekyll blog system is to sequence all the articles in the filename date value mentioned above.if the date is the newest ,that article will be put at the top.
-
-
-### Jekyll docs
-> [http://jekyllcn.com/docs][1]
 
 [1]:	http://jekyllcn.com/docs
