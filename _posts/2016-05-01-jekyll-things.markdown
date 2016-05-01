@@ -8,22 +8,18 @@ header-img: "img/post-bg-01.jpg"
 ---
 
 ### Syntax
-A blog hosted by jekyll has its unique syntax strcture.If the syntax can't be parsed well,the parser will quit the parsing the article display.
+A blog hosted by jekyll has its unique syntax structure.If the syntax can't be parsed well,the parser will quit the parsing the article display.
 
 commonly used syntax for article abstract for example:
 
-`
-`
----
-layout:     post
+`---
+`layout:     post
 title:      "jekyll blog things "
 subtitle:   "pitfalls of jekyll blog."
 date:       2016-05-01 12:00:00
 author:     "carbin-gun"
 header-img: "img/post-bg-01.jpg"
----
-
-`
+---`
 `
 
 ### Naming
