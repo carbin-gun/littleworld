@@ -11,6 +11,7 @@ header-img: "img/post-bg-01.jpg"
 A blog hosted by jekyll has its unique syntax structure especially for the header.If the syntax can't be parsed well,the parser will quit the parsing and the article display.
 
 commonly used syntax for article abstract for example:
+
 > ---
 > layout:     post
 > title:      "jekyll blog things "
