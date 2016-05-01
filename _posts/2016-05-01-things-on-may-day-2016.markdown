@@ -1,16 +1,13 @@
 ---
 layout:     post
-title:      "May Day post."
-date:       2016-05-01 10:00:00
+title:      "things on may day 2016"
+subtitle:   "Funny things of this day ."
+date:       2016-05-01 12:00:00
 author:     "carbin-gun"
-header-img: "img/post-bg-05.jpg"
+header-img: "img/post-bg-01.jpg"
 ---
 
 ### Hello ,May Day
 - How to spend this special day
 -  How to plan the future
 - See the future
-- work out for now
-- Java
-- Golang
-- Quotes problems
