@@ -13,7 +13,6 @@ A blog hosted by jekyll has its unique syntax structure especially for the heade
 commonly used syntax for article abstract for example:
 
 {% highlight %}
-
 ---
 layout:     post
 title:      "jekyll blog things "
