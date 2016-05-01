@@ -19,9 +19,8 @@ date:       2016-05-01 12:00:00
 author:     "carbin-gun"
 header-img: "img/post-bg-01.jpg"
 ---
-
 ```
 `
-### naming
+### Naming
 - the name of the article should follow the pattern of `yyyy-mm-dd-{article-name-delimeter-by-middle-line}`
 -  jekyll blog system is to sequence all the articles in the filename date value mentioned above.if the date is the newest ,that article will be put at the top.
