@@ -35,3 +35,7 @@ header-img: "img/post-bg-01.jpg"
 > {% highlight %}
 > //contents you want to highlight
 > {% endhighlight %}
+### Jekyll docs
+> [http://jekyllcn.com/docs][1]
+
+[1]:	http://jekyllcn.com/docs
