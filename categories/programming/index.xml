@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Programming on Little World</title>
-    <link>http://www.yourdomain.com/categories/programming/</link>
+    <link>http://littleworld.me/categories/programming/</link>
     <description>Recent content in Programming on Little World</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 31 Jul 2016 20:54:41 +0800</lastBuildDate>
-    <atom:link href="http://www.yourdomain.com/categories/programming/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://littleworld.me/categories/programming/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>excel export by poi</title>
-      <link>http://www.yourdomain.com/2016/07/31/excel-export-by-poi</link>
+      <link>http://littleworld.me/2016/07/31/excel-export-by-poi</link>
       <pubDate>Sun, 31 Jul 2016 20:54:41 +0800</pubDate>
       
-      <guid>http://www.yourdomain.com/2016/07/31/excel-export-by-poi</guid>
+      <guid>http://littleworld.me/2016/07/31/excel-export-by-poi</guid>
       <description>
 
 &lt;p&gt;It&amp;rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.&lt;/p&gt;
