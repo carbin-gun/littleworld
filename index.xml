@@ -53,7 +53,7 @@ for example,if there&amp;rsquo;s a table(table &lt;code&gt;A&lt;/code&gt;) in th
 
 &lt;p&gt;in this way, the JPA will do the query sent from B as a sequence of :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt; 1. query from table B ,filter all the columns by relevant conditions.
+&lt;pre&gt;&lt;code&gt; 1. query from table B ,filter all the rows by relevant conditions.
  2. query from table A by id ,from the above queries result.
 &lt;/code&gt;&lt;/pre&gt;
 
