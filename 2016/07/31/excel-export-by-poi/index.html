@@ -44,7 +44,7 @@
 
 
 <meta itemprop="dateModified" content="2016-07-31T20:54:41&#43;08:00" />
-<meta itemprop="wordCount" content="726">
+<meta itemprop="wordCount" content="775">
 
 
 
@@ -278,7 +278,7 @@
             <i class="fa fa-calendar"></i>
             <time datetime="2016-07-31 20:54:41 &#43;0800 CST" itemprop="datePublished">2016-07-31</time>
             &middot;
-            726
+            775
             words
             &middot;
             4
@@ -386,6 +386,8 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
 <li>configure universal URI for excels,then you can configure the PROXY at the NGINX layer to specified machines.</li>
 <li>configure a sub-domain,then as for the URL,you can write as <code>//subdomain/xxx</code>(don&rsquo;t touch the protocol,the browser will adapt it no matter it is http or https),you just modify the domain of the request URL. and configure the subdomain proxy at the NGINX.</li>
 </ul></li>
+
+<li><p>configure the Database query to a slave database instead of the master database, because the query may bring some pressure to the database that may cause the sync latency rising between master database and the slave ones and of course the performance problems which will affect other database operations.</p></li>
 
 <li><p>a little improvement by object sharing. for our export,there will be many Date object .I do some object sharing in the request by a <code>HashMap</code>,I can get a formatted Date String by a <code>Get</code> but not a <code>FastDateFormat</code> which will be much faster and reduce the memory footprint.</p></li>
 </ul>
