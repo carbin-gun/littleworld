@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-    <title>excel export by poi &middot; Little World</title>
+    <title>RabbitMQ &middot; Little World</title>
     <meta name="generator" content="Hugo 0.17-DEV" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -18,14 +18,14 @@
     <link rel="stylesheet" href="http://littleworld.me/fancybox/jquery.fancybox.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-    <meta property="og:title" content="excel export by poi" />
-<meta property="og:description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+    <meta property="og:title" content="RabbitMQ" />
+<meta property="og:description" content="Introduction and notes about the AMQP product:RabbitMQ, which is a widely used messaging-queue product,Here I will show some concepts about it on this post.
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://littleworld.me/2016/07/31/excel-export-by-poi" />
+<meta property="og:url" content="http://littleworld.me/2016/07/24/rabbitmq" />
 
 
-<meta property="og:updated_time" content="2016-07-31T20:54:41&#43;08:00"/>
+<meta property="og:updated_time" content="2016-07-24T14:20:41&#43;08:00"/>
 
 
 
@@ -38,13 +38,13 @@
 
     
     
-<meta itemprop="name" content="excel export by poi">
-<meta itemprop="description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+<meta itemprop="name" content="RabbitMQ">
+<meta itemprop="description" content="Introduction and notes about the AMQP product:RabbitMQ, which is a widely used messaging-queue product,Here I will show some concepts about it on this post.
 ">
 
 
-<meta itemprop="dateModified" content="2016-07-31T20:54:41&#43;08:00" />
-<meta itemprop="wordCount" content="775">
+<meta itemprop="dateModified" content="2016-07-24T14:20:41&#43;08:00" />
+<meta itemprop="wordCount" content="790">
 
 
 
@@ -56,8 +56,8 @@
 
 
 
-<meta name="twitter:title" content="excel export by poi"/>
-<meta name="twitter:description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+<meta name="twitter:title" content="RabbitMQ"/>
+<meta name="twitter:description" content="Introduction and notes about the AMQP product:RabbitMQ, which is a widely used messaging-queue product,Here I will show some concepts about it on this post.
 "/>
 <meta name="twitter:site" content="@cilendeng"/>
 
@@ -264,21 +264,21 @@
     <article id="page-undefined" class="article article-type-page" itemscope="" itemprop="blogPost">
         <div class="article-inner">
             
-                <img src="http://littleworld.me/banners/writing-desk.png" class="article-banner">
+                <img src="http://littleworld.me/banners/RabbitMQ.png" class="article-banner">
             
 
             <header class="article-header">
-    <a href="http://littleworld.me/2016/07/31/excel-export-by-poi">
+    <a href="http://littleworld.me/2016/07/24/rabbitmq">
     <h1 class="article-title" itemprop="name">
-        excel export by poi
+        RabbitMQ
     </h1>
     </a>
     <div class="article-meta">
         <div class="article-date">
             <i class="fa fa-calendar"></i>
-            <time datetime="2016-07-31 20:54:41 &#43;0800 CST" itemprop="datePublished">2016-07-31</time>
+            <time datetime="2016-07-24 14:20:41 &#43;0800 CST" itemprop="datePublished">2016-07-24</time>
             &middot;
-            775
+            790
             words
             &middot;
             4
@@ -305,7 +305,10 @@
             <div class="article-category">
                 <i class="fa fa-tags"></i>
                 
-                <a class="article-category-link" href="http://littleworld.me/tags/poi">poi</a>
+                <a class="article-category-link" href="http://littleworld.me/tags/queue">queue</a>
+                &middot;
+                
+                <a class="article-category-link" href="http://littleworld.me/tags/rabbitmq">RabbitMQ</a>
                 
                 
             </div>
@@ -317,99 +320,87 @@
             <div class="article-entry" itemprop="articleBody">
                 
 
-<p>It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.</p>
+<p>Introduction and notes about the <code>AMQP</code> product:RabbitMQ, which is a widely used messaging-queue product,Here I will show some concepts about it on this post.</p>
 
-<h2 id="background">Background</h2>
+<h3 id="enable-web-interface-management">enable web interface management</h3>
 
-<p>Recently,I&rsquo;ve been accepted a task from my boss about the excel export from our sites. The problem is summarized into two major problems as followed:</p>
-
-<ul>
-<li>The download is slow.</li>
-<li>Sometimes it will cause the JVM to crash.</li>
-</ul>
-
-<h2 id="process">Process</h2>
-
-<p>After digging into the code ,I&rsquo;ve found we used the <code>poi</code> lib from <code>Apache</code>, and there were some serious issues where were confronted with:</p>
-
-<ul>
-<li>JPA query,As for the high-level abstracted ORM tools,that may be a common problem ,the domain-driven code for database query.which may result in too many database queries.bingo, that&rsquo;s where we were.</li>
-<li>we used <code>XSSFWorkbook</code> class to create the Excel sheet,which carried all the objects in memory that will cause <code>OOM</code> when the excel is too large.</li>
-</ul>
-
-<h2 id="concrete-problems">Concrete Problems</h2>
-
-<h3 id="sql">SQL</h3>
-
-<p>As for JPA ,it is a wrapper of Hibernate which do generate all the SQL behind,you can reduce your focus on the business domain and logic.but sometimes it will not be a good choice to use it in a simple way.
-for example,if there&rsquo;s a table(table <code>A</code>) in the database ,and a column as another table&rsquo;s id(table <code>B</code>). at the same time, you abstract the two into an Entity and a field. which can be expressed as followed:</p>
-
-<pre><code> class B{
-    private A xxx
- }
- class A{
- }
+<pre><code>rabbitmq-plugins enable rabbitmq_management
 </code></pre>
 
-<p>in this way, the JPA will do the query sent from B as a sequence of :</p>
+<h3 id="messaging-model">Messaging Model.</h3>
 
-<pre><code> 1. query from table B ,filter all the rows by relevant conditions.
- 2. query from table A by id ,from the above queries result.
+<pre><code>  //Simplify the Model
+  - A producer is a user application that sends messages.
+  - A queue is a buffer that stores messages.
+  - A consumer is a user application that receives messages.
 </code></pre>
 
-<p>for queries like this,small amount of query ,it will be acceptable.But when the queried rows from the 1st query reaches some quantity,the interaction between the application server and the database will cause performance problems.</p>
-
-<h3 id="poi">POI</h3>
-
-<p><code>POI</code> is a mature lib from Apache. but for different demand ,there can be different implementations for excel generation.</p>
+<p>But Actually,The core idea in the messaging model in RabbitMQ is that the producer never sends any messages directly to a queue. Actually, quite often the producer doesn&rsquo;t even know if a message will be delivered to any queue at all.Instead, the producer can only send messages to an exchange. An exchange is a very simple thing. On one side it receives messages from producers and the other side it pushes them to queues. The exchange must know exactly what to do with a message it receives. Should it be appended to a particular queue? Should it be appended to many queues? Or should it get discarded. The rules for that are defined by the exchange type.</p>
 
 <ul>
-<li>HSSF , for the Excel &lsquo;97(-2007) file format.</li>
-<li>XSSF,  for the Excel 2007 OOXML (.xlsx) file format ,which uses XML as the underground implementation as the excel archive.</li>
-<li>SXSSF, compatible with the XSSF,but SXSSF achieves its low memory footprint by limiting access to the rows that are within a sliding window, while XSSF gives access to all rows in the document. Older rows that are no longer in the window become inaccessible, as they are written to the disk.
-apparently ,from the display above,we can draw a safe conclusion: ** we should use SXSSF **, because we didn&rsquo;t know how much rows it will be generated by limited queries,we must limit the memory access for safety.</li>
+<li>default exchange named <code>amq.direct</code> is <code>direct</code> type exchange, default exchange is very useful,because every queue that is created is automatically bound to it with a routing key which is the same as the queue name.So when we don&rsquo;t declare a exchange,it will work well . the default direct exchange is ideal for the <code>unicast</code> routing of messages.Direct exchanges are often used to distribute tasks between multiple workers in a <code>round-robin</code> manner. When doing so, it is important to understand that, in AMQP 0-9-1, <strong>messages are load balanced between consumers and not between queues.</strong></li>
 </ul>
 
-<h2 id="resolve">Resolve</h2>
+<h3 id="exchange-types">Exchange Types</h3>
+
+<pre><code>- direct,it can dispatch queues,the exchange will dispatch messages according to the `routing_key` matching,when a exchange is declared,a `routing_key` was defined,after queue binding,the `routing` between queues and exchange was established, when a message goes to the exchange,if the `routing_key` of a message matches the `routing_key` of the exchange,it will be dispatched to the queue,which declares the `routing_key` when it established the binding.
+
+- topic,compared to `direct` type ,`topic` can route based on multiple criteria.
+
+- headers, routing on message headers instead of `routing_key`, Headers exchanges ignore the routing key attribute.
+
+- fanout, it just broadcasts all the messages it receives to all the queues it knows. It ignores that `routing_key` setting on the exchange setting,It just do **mindless broadcasting**.
+</code></pre>
+
+<h3 id="message-publish">Message Publish</h3>
+
+<p>when we do simple messaging things,we don&rsquo;t need to specify the exchange,instead we use an empty string to denote  default or nameless exchange: messages are routed to the queue with the name specified by routing_key, if it exists.</p>
+
+<p>the exchanges existed can be queried by command like : <code>rabbitmqctl list_exchanges</code></p>
+
+<h3 id="bindings">Bindings</h3>
 
 <ul>
-<li>Replace all the ORM query with <code>native sql</code> to accelerate the SQL query speed.which may not be that handy for ORM mapping tool.but as for speed, it is an overwhelming winner for <code>SQL</code> to ORM.</li>
-<li>use the <code>SXSSWorkbook</code> as an replacement for <code>XSSFWorkbook</code> which will reduce the memory footprint dramatically.</li>
+<li>tell the exchange to send messages to our queue. That relationship between exchange and a queue is called a binding.</li>
+<li><code>rabbitmqctl list_bindings</code> to list existing Bindings on the RabbitMQ server.</li>
 </ul>
 
-<h2 id="further-more">Further More</h2>
+<h3 id="durablity">Durablity</h3>
 
 <ul>
-<li><p>Isolate the excel server with other servers.As is known ,The excel process will generate a large amount of temp objects,which will affect the online performance that will result in latency of other online request. so Isolation is a good choice. Which can be down in some ways:</p>
+<li>queue of rabbitMQ was set durable,but after the RabbitMQ broker was restarted,the queue was empty.Because at the same time  you should set the property called  <code>DeliveryMode</code> of the message to be <code>persistent</code> too.
+<code>DeliveryMode</code> can be set as two values:
 
 <ul>
-<li>configure universal URI for excels,then you can configure the PROXY at the NGINX layer to specified machines.</li>
-<li>configure a sub-domain,then as for the URL,you can write as <code>//subdomain/xxx</code>(don&rsquo;t touch the protocol,the browser will adapt it no matter it is http or https),you just modify the domain of the request URL. and configure the subdomain proxy at the NGINX.</li>
+<li><code>1</code> represents <code>transient</code></li>
+<li><code>2</code> represents <code>persistent</code>,with that value the item will be persisted into disk storage instantly when the broker receives the publishing.
+<br /></li>
 </ul></li>
-
-<li><p>configure the Database query to a slave database instead of the master one, because the query may bring some pressure to the database that may cause the sync latency rising between master database and the slave ones and of course the performance problems which will affect other database operations.</p></li>
-
-<li><p>a little improvement by object sharing. for our export,there will be many Date object .I do some object sharing in the request by a <code>HashMap</code>,I can get a formatted Date String by a <code>Get</code> but not a <code>FastDateFormat</code> which will be much faster and reduce the memory footprint.</p></li>
 </ul>
 
-<h2 id="result">Result</h2>
+<h3 id="fair-dispatch">Fair dispatch.</h3>
 
-<p>The Excel can be generated and exported into client in a short period. And with the isolation with other online servers,we can ignore the impact by the excel-export to our online business and the latency.</p>
+<p>RabbitMQ just dispatches a message when the message enters the queue. It doesn&rsquo;t look at the number of unacknowledged messages for a consumer. It just blindly dispatches every nth message to the nth consumer.In this context,sometimes, that we push messages evenly to every worker is not properly right.we could dispatch by each worker&rsquo;s capacity,  we can use the <code>basic.qos</code> method with the <code>prefetch_count=${number}</code> setting. This tells RabbitMQ not to give more than one message to a worker at a time. Or, in other words, don&rsquo;t dispatch a new message to a worker until it has processed and acknowledged the previous one. Instead, it will dispatch it to the next worker that is not still busy.(In a real world.the prefetch_count might be not only one for efficiency,but might not too much either).</p>
 
-<h2 id="tips">Tips</h2>
+<h3 id="message-removal">Message Removal</h3>
 
-<ul>
-<li>Don&rsquo;t forget to invoke poi&rsquo;s <code>dispose</code> after the whole process. Otherwise,there will be a lot of temp files on your server.</li>
-<li>Prepare the excel header row in advance which is better for speed.</li>
-</ul>
+<p>RabbitMQ will remove the messages from memory and queue of course,but if the  consumer dies (its channel is closed, connection is closed, or TCP connection is lost),we will lose all the messages that were dispatched to this particular worker but were not yet handled.
+  we should not remove the message from RabbitMQ broker immediately after delivery success to the consumer. Instead the mechanism should be like this:
+    1. the messages delivered to consumer,do not remove immediately but wait.
+    2. the consumer do all the processing and do ACK to the RabbitMQ broker.
+    3. If an ACK was received from the broker ,the message can be removed from broker now.</p>
+
+<h1 id="links">Links</h1>
+
+<p><a href="http://www.rabbitmq.com/tutorials/amqp-concepts.html">RabbitMQ concepts</a></p>
 
             </div>
             <footer class="article-footer">
-    <a data-url="http://littleworld.me/2016/07/31/excel-export-by-poi" data-id="ea50b88b5063f74efc850118c4307e8c" class="article-share-link">
+    <a data-url="http://littleworld.me/2016/07/24/rabbitmq" data-id="19d8834165f044a96d6cd27cb8d56ec5" class="article-share-link">
         Share
     </a>
     
-    <a href="http://littleworld.me/2016/07/31/excel-export-by-poi/#disqus_thread" class="article-comment-link">
+    <a href="http://littleworld.me/2016/07/24/rabbitmq/#disqus_thread" class="article-comment-link">
         Comments
     </a>
     
@@ -420,14 +411,14 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
         
 <nav id="article-nav">
     
-    <a href="http://littleworld.me/2016/07/24/rabbitmq" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">
-          Older
-      </strong>
-      <div class="article-nav-title">RabbitMQ</div>
-    </a>
-    
 
+    
+    <a href="http://littleworld.me/2016/07/31/excel-export-by-poi" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">
+          Newer
+      </strong>
+      <div class="article-nav-title">excel export by poi</div>
+    </a>
     
 </nav>
 
@@ -440,9 +431,9 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
             <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'carbingun';
-    var disqus_identifier = 'http:\/\/littleworld.me\/2016\/07\/31\/excel-export-by-poi';
-    var disqus_title = 'excel export by poi';
-    var disqus_url = 'http:\/\/littleworld.me\/2016\/07\/31\/excel-export-by-poi';
+    var disqus_identifier = 'http:\/\/littleworld.me\/2016\/07\/24\/rabbitmq';
+    var disqus_title = 'RabbitMQ';
+    var disqus_url = 'http:\/\/littleworld.me\/2016\/07\/24\/rabbitmq';
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -472,7 +463,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/31/excel-export-by-poi" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="RabbitMQ" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -497,7 +488,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/24/rabbitmq" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/RabbitMQ.png)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/RabbitMQ.png)" alt="RabbitMQ" class="thumbnail-image"></span>
                     
                     </a>
                 </div>

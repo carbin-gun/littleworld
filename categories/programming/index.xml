@@ -105,5 +105,89 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
 </description>
     </item>
     
+    <item>
+      <title>RabbitMQ</title>
+      <link>http://littleworld.me/2016/07/24/rabbitmq</link>
+      <pubDate>Sun, 24 Jul 2016 14:20:41 +0800</pubDate>
+      
+      <guid>http://littleworld.me/2016/07/24/rabbitmq</guid>
+      <description>
+
+&lt;p&gt;Introduction and notes about the &lt;code&gt;AMQP&lt;/code&gt; product:RabbitMQ, which is a widely used messaging-queue product,Here I will show some concepts about it on this post.&lt;/p&gt;
+
+&lt;h3 id=&#34;enable-web-interface-management&#34;&gt;enable web interface management&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;rabbitmq-plugins enable rabbitmq_management
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;messaging-model&#34;&gt;Messaging Model.&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;  //Simplify the Model
+  - A producer is a user application that sends messages.
+  - A queue is a buffer that stores messages.
+  - A consumer is a user application that receives messages.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But Actually,The core idea in the messaging model in RabbitMQ is that the producer never sends any messages directly to a queue. Actually, quite often the producer doesn&amp;rsquo;t even know if a message will be delivered to any queue at all.Instead, the producer can only send messages to an exchange. An exchange is a very simple thing. On one side it receives messages from producers and the other side it pushes them to queues. The exchange must know exactly what to do with a message it receives. Should it be appended to a particular queue? Should it be appended to many queues? Or should it get discarded. The rules for that are defined by the exchange type.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;default exchange named &lt;code&gt;amq.direct&lt;/code&gt; is &lt;code&gt;direct&lt;/code&gt; type exchange, default exchange is very useful,because every queue that is created is automatically bound to it with a routing key which is the same as the queue name.So when we don&amp;rsquo;t declare a exchange,it will work well . the default direct exchange is ideal for the &lt;code&gt;unicast&lt;/code&gt; routing of messages.Direct exchanges are often used to distribute tasks between multiple workers in a &lt;code&gt;round-robin&lt;/code&gt; manner. When doing so, it is important to understand that, in AMQP 0-9-1, &lt;strong&gt;messages are load balanced between consumers and not between queues.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;exchange-types&#34;&gt;Exchange Types&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;- direct,it can dispatch queues,the exchange will dispatch messages according to the `routing_key` matching,when a exchange is declared,a `routing_key` was defined,after queue binding,the `routing` between queues and exchange was established, when a message goes to the exchange,if the `routing_key` of a message matches the `routing_key` of the exchange,it will be dispatched to the queue,which declares the `routing_key` when it established the binding.
+
+- topic,compared to `direct` type ,`topic` can route based on multiple criteria.
+
+- headers, routing on message headers instead of `routing_key`, Headers exchanges ignore the routing key attribute.
+
+- fanout, it just broadcasts all the messages it receives to all the queues it knows. It ignores that `routing_key` setting on the exchange setting,It just do **mindless broadcasting**.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;message-publish&#34;&gt;Message Publish&lt;/h3&gt;
+
+&lt;p&gt;when we do simple messaging things,we don&amp;rsquo;t need to specify the exchange,instead we use an empty string to denote  default or nameless exchange: messages are routed to the queue with the name specified by routing_key, if it exists.&lt;/p&gt;
+
+&lt;p&gt;the exchanges existed can be queried by command like : &lt;code&gt;rabbitmqctl list_exchanges&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;bindings&#34;&gt;Bindings&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;tell the exchange to send messages to our queue. That relationship between exchange and a queue is called a binding.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rabbitmqctl list_bindings&lt;/code&gt; to list existing Bindings on the RabbitMQ server.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;durablity&#34;&gt;Durablity&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;queue of rabbitMQ was set durable,but after the RabbitMQ broker was restarted,the queue was empty.Because at the same time  you should set the property called  &lt;code&gt;DeliveryMode&lt;/code&gt; of the message to be &lt;code&gt;persistent&lt;/code&gt; too.
+&lt;code&gt;DeliveryMode&lt;/code&gt; can be set as two values:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;1&lt;/code&gt; represents &lt;code&gt;transient&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;2&lt;/code&gt; represents &lt;code&gt;persistent&lt;/code&gt;,with that value the item will be persisted into disk storage instantly when the broker receives the publishing.
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;fair-dispatch&#34;&gt;Fair dispatch.&lt;/h3&gt;
+
+&lt;p&gt;RabbitMQ just dispatches a message when the message enters the queue. It doesn&amp;rsquo;t look at the number of unacknowledged messages for a consumer. It just blindly dispatches every nth message to the nth consumer.In this context,sometimes, that we push messages evenly to every worker is not properly right.we could dispatch by each worker&amp;rsquo;s capacity,  we can use the &lt;code&gt;basic.qos&lt;/code&gt; method with the &lt;code&gt;prefetch_count=${number}&lt;/code&gt; setting. This tells RabbitMQ not to give more than one message to a worker at a time. Or, in other words, don&amp;rsquo;t dispatch a new message to a worker until it has processed and acknowledged the previous one. Instead, it will dispatch it to the next worker that is not still busy.(In a real world.the prefetch_count might be not only one for efficiency,but might not too much either).&lt;/p&gt;
+
+&lt;h3 id=&#34;message-removal&#34;&gt;Message Removal&lt;/h3&gt;
+
+&lt;p&gt;RabbitMQ will remove the messages from memory and queue of course,but if the  consumer dies (its channel is closed, connection is closed, or TCP connection is lost),we will lose all the messages that were dispatched to this particular worker but were not yet handled.
+  we should not remove the message from RabbitMQ broker immediately after delivery success to the consumer. Instead the mechanism should be like this:
+    1. the messages delivered to consumer,do not remove immediately but wait.
+    2. the consumer do all the processing and do ACK to the RabbitMQ broker.
+    3. If an ACK was received from the broker ,the message can be removed from broker now.&lt;/p&gt;
+
+&lt;h1 id=&#34;links&#34;&gt;Links&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/amqp-concepts.html&#34;&gt;RabbitMQ concepts&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
