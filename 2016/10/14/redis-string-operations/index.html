@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-    <title>excel export by poi &middot; Little World</title>
+    <title>redis string operations &middot; Little World</title>
     <meta name="generator" content="Hugo 0.17-DEV" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -18,14 +18,14 @@
     <link rel="stylesheet" href="http://littleworld.me/fancybox/jquery.fancybox.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-    <meta property="og:title" content="excel export by poi" />
-<meta property="og:description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+    <meta property="og:title" content="redis string operations" />
+<meta property="og:description" content="Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://littleworld.me/2016/07/31/excel-export-by-poi" />
+<meta property="og:url" content="http://littleworld.me/2016/10/14/redis-string-operations" />
 
 
-<meta property="og:updated_time" content="2016-07-31T20:54:41&#43;08:00"/>
+<meta property="og:updated_time" content="2016-10-14T16:20:41&#43;08:00"/>
 
 
 
@@ -38,13 +38,13 @@
 
     
     
-<meta itemprop="name" content="excel export by poi">
-<meta itemprop="description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+<meta itemprop="name" content="redis string operations">
+<meta itemprop="description" content="Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.
 ">
 
 
-<meta itemprop="dateModified" content="2016-07-31T20:54:41&#43;08:00" />
-<meta itemprop="wordCount" content="775">
+<meta itemprop="dateModified" content="2016-10-14T16:20:41&#43;08:00" />
+<meta itemprop="wordCount" content="331">
 
 
 
@@ -56,8 +56,8 @@
 
 
 
-<meta name="twitter:title" content="excel export by poi"/>
-<meta name="twitter:description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+<meta name="twitter:title" content="redis string operations"/>
+<meta name="twitter:description" content="Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.
 "/>
 <meta name="twitter:site" content="@cilendeng"/>
 
@@ -264,24 +264,24 @@
     <article id="page-undefined" class="article article-type-page" itemscope="" itemprop="blogPost">
         <div class="article-inner">
             
-                <img src="http://littleworld.me/banners/writing-desk.png" class="article-banner">
+                <img src="http://littleworld.me/banners/redis.jpg" class="article-banner">
             
 
             <header class="article-header">
-    <a href="http://littleworld.me/2016/07/31/excel-export-by-poi">
+    <a href="http://littleworld.me/2016/10/14/redis-string-operations">
     <h1 class="article-title" itemprop="name">
-        excel export by poi
+        redis string operations
     </h1>
     </a>
     <div class="article-meta">
         <div class="article-date">
             <i class="fa fa-calendar"></i>
-            <time datetime="2016-07-31 20:54:41 &#43;0800 CST" itemprop="datePublished">2016-07-31</time>
+            <time datetime="2016-10-14 16:20:41 &#43;0800 CST" itemprop="datePublished">2016-10-14</time>
             &middot;
-            775
+            331
             words
             &middot;
-            4
+            2
             minute read
         </div>
 
@@ -293,6 +293,9 @@
                 <i class="fa fa-folder"></i>
                 
                 <a class="article-category-link" href="http://littleworld.me/categories/programming">programming</a>
+                &middot;
+                
+                <a class="article-category-link" href="http://littleworld.me/categories/cache">cache</a>
                 
                 
             </div>
@@ -305,7 +308,13 @@
             <div class="article-category">
                 <i class="fa fa-tags"></i>
                 
-                <a class="article-category-link" href="http://littleworld.me/tags/poi">poi</a>
+                <a class="article-category-link" href="http://littleworld.me/tags/redis">redis</a>
+                &middot;
+                
+                <a class="article-category-link" href="http://littleworld.me/tags/string">string</a>
+                &middot;
+                
+                <a class="article-category-link" href="http://littleworld.me/tags/rate-limit">rate limit</a>
                 
                 
             </div>
@@ -317,99 +326,209 @@
             <div class="article-entry" itemprop="articleBody">
                 
 
-<p>It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.</p>
+<p>Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.</p>
 
-<h2 id="background">Background</h2>
+<h2 id="redis">Redis</h2>
 
-<p>Recently,I&rsquo;ve been accepted a task from my boss about the excel export from our sites. The problem is summarized into two major problems as followed:</p>
+<h2 id="string-operation">String Operation.</h2>
+
+<h2 id="set">SET</h2>
 
 <ul>
-<li>The download is slow.</li>
-<li>Sometimes it will cause the JVM to crash.</li>
+<li>用法: <code>SET key value [EX seconds] [PX milliseconds] [NX|XX]</code>,整个set系列里功能最完整的一个命令,<code>setnx</code>,<code>setex</code>能完成的事情，都可以用<code>set</code>完成.</li>
+<li>对于某个原本带有生存时间（TTL）的键来说， 当 SET 命令成功在这个键上执行时， 这个键原有的 TTL 将被清除。</li>
+<li>即: <strong>set是一个覆盖式写.如果写发生，则对于value和ttl都是覆盖式的</strong>.</li>
+
+<li><p>解释:</p>
+
+<table>
+<thead>
+<tr>
+<th>key word</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>EX second</td>
+<td>设置键的过期时间为 second 秒。 SET key value EX second 效果等同于 SETEX key second value.</td>
+</tr>
+
+<tr>
+<td>PX millisecond</td>
+<td>设置键的过期时间为 millisecond 毫秒。 SET key value PX millisecond 效果等同于 PSETEX key millisecond value.</td>
+</tr>
+
+<tr>
+<td>NX</td>
+<td>只在键不存在时，才对键进行设置操作。 SET key value NX 效果等同于 SETNX key value .</td>
+</tr>
+
+<tr>
+<td>XX</td>
+<td>只在键已经存在时，才对键进行设置操作.</td>
+</tr>
+</tbody>
+</table></li>
 </ul>
 
-<h2 id="process">Process</h2>
-
-<p>After digging into the code ,I&rsquo;ve found we used the <code>poi</code> lib from <code>Apache</code>, and there were some serious issues where were confronted with:</p>
+<h2 id="getbit-setbit-bitcount">GETBIT/SETBIT/BITCOUNT</h2>
 
 <ul>
-<li>JPA query,As for the high-level abstracted ORM tools,that may be a common problem ,the domain-driven code for database query.which may result in too many database queries.bingo, that&rsquo;s where we were.</li>
-<li>we used <code>XSSFWorkbook</code> class to create the Excel sheet,which carried all the objects in memory that will cause <code>OOM</code> when the excel is too large.</li>
+<li><code>Redis</code>针对位做操作的支持.</li>
+<li>用法 : <code>setbit key offset 1</code>,设置某个key的某个offset为1(当然也可以设置为0,不过因为默认为0.为0的时候不去管理就好了。不过如果是设置为1设置错了或者要重新从1变为0,就可以设置).<code>getbit key offset</code>,获取key的offset位置的bit值是0还是1.<code>bitcount key [start] [end]</code>,给出key在指定区间(不指定区间则表示所有),所有bit值为1的个数.</li>
+<li>模式:
+
+<ol>
+<li><strong>Bitmap</strong> 对于一些特定类型的计算非常有效。假设现在我们希望记录自己网站上的用户的<strong>上线频率</strong>，比如说，计算用户 A 上线了多少天，用户 B 上线了多少天，诸如此类，以此作为数据，从而决定让哪些用户参加 beta 测试等活动 —— 这个模式可以使用 SETBIT 和 BITCOUNT 来实现。</li>
+<li>以此想到了一个场景,比如每个用户每天只能操作一次的情况.每个月最多31号.维护一个31bit长的redis key即可.每天如果操作了就是1.没操作就是0.每个月做一次数据的删除(keys+del,此时keys跟del非原子,要保证原子性还是得用<code>redis+lua</code>),不然会可能有人在删除的间隙操作了,这时候由于整个删除机制被干掉了.BUT更好的方式是每天重置之前天的数据就好了.这样所有数据重置的时候没有写入,也就不需要考虑资源征用的问题(<strong>通过避免并发才是最好的性能</strong>).但是这里最重要的是,一定周期之后要获得用户每天的是否操作的数据,如果不获得则仅仅就用（setnx来做就行,这样每天的数据是一个key.这个key第二次就会由于存在而setnx会返回失败).</li>
+</ol></li>
+
+<li><p>BIT操作的性能</p>
+
+<ol>
+<li><p>前面的上线次数统计例子，即使运行 10 年，占用的空间也只是每个用户 10*365 比特位(bit)，也即是每个用户 456 字节。对于这种大小的数据来说， BITCOUNT 的处理速度就像 GET 和 INCR 这种 O(1) 复杂度的操作一样快。</p></li>
+
+<li><p>如果你的 bitmap 数据非常大，那么可以考虑使用以下两种方法：</p></li>
+</ol>
+
+<p>将一个大的 bitmap 分散到不同的 key 中，作为小的 bitmap 来处理。使用 Lua 脚本可以很方便地完成这一工作。
+使用 BITCOUNT 的 start 和 end 参数，每次只对所需的部分位进行计算，将位的累积工作(accumulating)放到客户端进行，并且对结果进行缓存 (caching).</p></li>
 </ul>
 
-<h2 id="concrete-problems">Concrete Problems</h2>
-
-<h3 id="sql">SQL</h3>
-
-<p>As for JPA ,it is a wrapper of Hibernate which do generate all the SQL behind,you can reduce your focus on the business domain and logic.but sometimes it will not be a good choice to use it in a simple way.
-for example,if there&rsquo;s a table(table <code>A</code>) in the database ,and a column as another table&rsquo;s id(table <code>B</code>). at the same time, you abstract the two into an Entity and a field. which can be expressed as followed:</p>
-
-<pre><code> class B{
-    private A xxx
- }
- class A{
- }
-</code></pre>
-
-<p>in this way, the JPA will do the query sent from B as a sequence of :</p>
-
-<pre><code> 1. query from table B ,filter all the rows by relevant conditions.
- 2. query from table A by id ,from the above queries result.
-</code></pre>
-
-<p>for queries like this,small amount of query ,it will be acceptable.But when the queried rows from the 1st query reaches some quantity,the interaction between the application server and the database will cause performance problems.</p>
-
-<h3 id="poi">POI</h3>
-
-<p><code>POI</code> is a mature lib from Apache. but for different demand ,there can be different implementations for excel generation.</p>
+<h2 id="getset">GETSET</h2>
 
 <ul>
-<li>HSSF , for the Excel &lsquo;97(-2007) file format.</li>
-<li>XSSF,  for the Excel 2007 OOXML (.xlsx) file format ,which uses XML as the underground implementation as the excel archive.</li>
-<li>SXSSF, compatible with the XSSF,but SXSSF achieves its low memory footprint by limiting access to the rows that are within a sliding window, while XSSF gives access to all rows in the document. Older rows that are no longer in the window become inaccessible, as they are written to the disk.
-apparently ,from the display above,we can draw a safe conclusion: ** we should use SXSSF **, because we didn&rsquo;t know how much rows it will be generated by limited queries,we must limit the memory access for safety.</li>
+<li>用法 <code>getset key value</code>,给key设置一个新值,并返回key的旧值(没有旧值返回nil).</li>
+<li><code>set</code>命令成功返回的是OK.</li>
+
+<li><p>模式:</p>
+
+<ol>
+<li>GETSET 可以和 INCR 组合使用，实现一个有原子性(atomic)复位操作的计数器(counter)。</li>
+
+<li><p>举例来说，每次当某个事件发生时，进程可能对一个名为 mycount 的 key 调用 INCR 操作，通常我们还要在一个原子时间内同时完成获得计数器的值和将计数器值复位为 0 两个操作.实际上在实际过程中,需要在<code>incr</code>之后还要对<code>incr</code>的操作结果做判断,然后再复位为0.这时候<code>incr</code>和<code>getset</code>之间已经有时间消耗，不再是原子的.这在高并发场景如果不能接受.这时候应该考虑<code>redis+lua</code>的实现.</p>
+
+<pre><code>redis&gt; INCR mycount
+(integer) 11
+
+redis&gt; GETSET mycount 0  # 一个原子内完成 GET mycount 和 SET mycount 0 操作
+&quot;11&quot;
+
+redis&gt; GET mycount       # 计数器被重置
+&quot;0&quot;
+</code></pre></li>
+</ol></li>
 </ul>
 
-<h2 id="resolve">Resolve</h2>
+<h2 id="mget">MGET</h2>
 
 <ul>
-<li>Replace all the ORM query with <code>native sql</code> to accelerate the SQL query speed.which may not be that handy for ORM mapping tool.but as for speed, it is an overwhelming winner for <code>SQL</code> to ORM.</li>
-<li>use the <code>SXSSWorkbook</code> as an replacement for <code>XSSFWorkbook</code> which will reduce the memory footprint dramatically.</li>
+<li>用法 <code>mget key1 [key2] [key3...]</code>,一次返回多个key的值,返回值的顺序和key值的顺序一致.</li>
+
+<li><p>如果某个key不存在,该key对应返回的值是nil,该命令永不失败.</p>
+
+<h2 id="mset">MSET</h2></li>
+
+<li><p>用法: <code>MSET key value [key value ...]</code>,一次设置多个key的值.</p></li>
+
+<li><p>如果某个给定 key 已经存在，那么 <strong>MSET 会用新值覆盖原来的旧值</strong>，如果这不是你所希望的效果，请考虑使用 <strong>MSETNX 命令：它只会在所有给定 key 都不存在的情况下进行设置操作s</strong>。</p></li>
+
+<li><p><strong>MSET是一个原子性(atomic)操作</strong>，所有给定 key 都会在同一时间内被设置，某些给定 key 被更新而另一些给定 key 没有改变的情况，不可能发生.</p></li>
+
+<li><p><strong>命令总是返回OK,因为mset不会失败</strong>.</p></li>
 </ul>
 
-<h2 id="further-more">Further More</h2>
+<h2 id="msetnx">MSETNX</h2>
 
 <ul>
-<li><p>Isolate the excel server with other servers.As is known ,The excel process will generate a large amount of temp objects,which will affect the online performance that will result in latency of other online request. so Isolation is a good choice. Which can be down in some ways:</p>
-
-<ul>
-<li>configure universal URI for excels,then you can configure the PROXY at the NGINX layer to specified machines.</li>
-<li>configure a sub-domain,then as for the URL,you can write as <code>//subdomain/xxx</code>(don&rsquo;t touch the protocol,the browser will adapt it no matter it is http or https),you just modify the domain of the request URL. and configure the subdomain proxy at the NGINX.</li>
-</ul></li>
-
-<li><p>configure the Database query to a slave database instead of the master one, because the query may bring some pressure to the database that may cause the sync latency rising between master database and the slave ones and of course the performance problems which will affect other database operations.</p></li>
-
-<li><p>a little improvement by object sharing. for our export,there will be many Date object .I do some object sharing in the request by a <code>HashMap</code>,I can get a formatted Date String by a <code>Get</code> but not a <code>FastDateFormat</code> which will be much faster and reduce the memory footprint.</p></li>
+<li>用法同mset,但是不同的是仅仅在所有key不存在的时候才设置值.如果有任何一个key已经存在,整个msetnx是不执行的.</li>
+<li><strong>MSETNX是一个原子性(atomic)操作</strong></li>
 </ul>
 
-<h2 id="result">Result</h2>
-
-<p>The Excel can be generated and exported into client in a short period. And with the isolation with other online servers,we can ignore the impact by the excel-export to our online business and the latency.</p>
-
-<h2 id="tips">Tips</h2>
+<h2 id="setex">SETEX</h2>
 
 <ul>
-<li>Don&rsquo;t forget to invoke poi&rsquo;s <code>dispose</code> after the whole process. Otherwise,there will be a lot of temp files on your server.</li>
-<li>Prepare the excel header row in advance which is better for speed.</li>
+<li>用法: <code>setex key seconds value</code>,含义: set expire.</li>
+
+<li><p>最终结果等价于</p>
+
+<pre><code>set key value
+expire key seconds
+</code></pre></li>
+
+<li><p>与以上命令的区别:</p>
+
+<ol>
+<li>setex是一个原子操作,关联key和value的同时设置了超时时间.但是一旦用set+expire组合来实现的时候,至少是两个命令.这时候中间至少有 <code>set返回+expire命令发送的时间间隔</code>,如果set和expire在发送到redis之间有别的操作,间隔时间就会更长.</li>
+</ol></li>
+</ul>
+
+<h2 id="psetex">PSETEX</h2>
+
+<ul>
+<li>用法: <code>psetex key milliseconds value</code>.</li>
+<li>这个命令和 SETEX 命令相似，但<strong>它以毫秒为单位设置 key 的生存时间，而不是像 SETEX 命令那样，以秒为单位</strong>。</li>
+</ul>
+
+<h2 id="setnx">SETNX</h2>
+
+<ul>
+<li>用法: <code>setnx key value</code>,含义:set if not exist.</li>
+<li>注意: <strong>setnx不支持设置超时时间</strong>，仅仅能给key设置一个不带超时的值.</li>
+
+<li><p>模式: 可以用在只能操作一次的场景.比如 每天只能签到一次.这时候第二次来接口重复性验证就可以redis直接完成(速度更快).每次操作如果不是永远有效.往往还需要设置一个expire的时间.这时候如果用<code>setnx+expire</code>不能保证原子性.则需要用<code>set+NX</code>命令来实现</p>
+
+<h2 id="setrange">SETRANGE</h2></li>
+
+<li><p>用法:<code>setrange key offset value</code>.</p></li>
+
+<li><p>最简总结:<strong>override从offset开始的数据,如果offset之前无内容用&rdquo;\x00&rdquo;填充,key不存在,相当于整个内容最初就是空的</strong>.</p></li>
+
+<li><p>SETRANGE 命令会确保字符串足够长以便将 value 设置在指定的偏移量上，如果给定 key 原来储存的字符串长度比偏移量小(比如字符串只有 5 个字符长，但你设置的 offset 是 10 )，那么原字符和偏移量之间的空白将用零字节(zerobytes, &ldquo;\x00&rdquo; )来填充。</p></li>
+</ul>
+
+<h2 id="getrange">GETRANGE</h2>
+
+<ul>
+<li>用法: <code>getrange key start end</code>,返回key对应的value的从start到end的内容(包含start和end).</li>
+<li>如果key不存在的时候，返回的是空字符串.</li>
+</ul>
+
+<h2 id="ttl">TTL</h2>
+
+<ul>
+<li>用法: <code>ttl key</code>,得到key的超时时间.返回的单位为秒.</li>
+
+<li><p>不同返回值的含义</p>
+
+<pre><code> -1 -- 如果key没有超时时间,则返回-1.
+ -2 -- 如果key不存在,返回-2.
+ 否则以秒为大内，返回key的超时剩余时间.
+</code></pre></li>
+</ul>
+
+<h2 id="incr-decr-incrby-decrby">INCR/DECR/INCRBY/DECRBY</h2>
+
+<ul>
+<li>用法 : <code>incr/decr key</code>对key做加/减1.<code>incrby/decrby key incrementVal/decrementVal</code></li>
+<li>如果 key 不存在，那么 key 的值会先被初始化为 0,然后再执行操作.</li>
+</ul>
+
+<h3 id="strlen">STRLEN</h3>
+
+<ul>
+<li>用法： <code>strlen key</code>,返回一个string value的长度.</li>
 </ul>
 
             </div>
             <footer class="article-footer">
-    <a data-url="http://littleworld.me/2016/07/31/excel-export-by-poi" data-id="ea50b88b5063f74efc850118c4307e8c" class="article-share-link">
+    <a data-url="http://littleworld.me/2016/10/14/redis-string-operations" data-id="44eb0e541e631d2644a1f7c126819761" class="article-share-link">
         Share
     </a>
     
-    <a href="http://littleworld.me/2016/07/31/excel-export-by-poi/#disqus_thread" class="article-comment-link">
+    <a href="http://littleworld.me/2016/10/14/redis-string-operations/#disqus_thread" class="article-comment-link">
         Comments
     </a>
     
@@ -420,21 +539,14 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
         
 <nav id="article-nav">
     
-    <a href="http://littleworld.me/2016/07/24/rabbitmq" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="http://littleworld.me/2016/07/31/excel-export-by-poi" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">
           Older
       </strong>
-      <div class="article-nav-title">RabbitMQ</div>
+      <div class="article-nav-title">excel export by poi</div>
     </a>
     
 
-    
-    <a href="http://littleworld.me/2016/10/14/redis-string-operations" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">
-          Newer
-      </strong>
-      <div class="article-nav-title">redis string operations</div>
-    </a>
     
 </nav>
 
@@ -447,9 +559,9 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
             <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'carbingun';
-    var disqus_identifier = 'http:\/\/littleworld.me\/2016\/07\/31\/excel-export-by-poi';
-    var disqus_title = 'excel export by poi';
-    var disqus_url = 'http:\/\/littleworld.me\/2016\/07\/31\/excel-export-by-poi';
+    var disqus_identifier = 'http:\/\/littleworld.me\/2016\/10\/14\/redis-string-operations';
+    var disqus_title = 'redis string operations';
+    var disqus_url = 'http:\/\/littleworld.me\/2016\/10\/14\/redis-string-operations';
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -479,7 +591,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/14/redis-string-operations" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="redis string operations" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -504,7 +616,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/31/excel-export-by-poi" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="redis string operations" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -529,7 +641,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/24/rabbitmq" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/RabbitMQ.png)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/RabbitMQ.png)" alt="redis string operations" class="thumbnail-image"></span>
                     
                     </a>
                 </div>

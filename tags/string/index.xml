@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>String on Little World</title>
+    <link>http://littleworld.me/tags/string/</link>
+    <description>Recent content in String on Little World</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 14 Oct 2016 16:20:41 +0800</lastBuildDate>
+    <atom:link href="http://littleworld.me/tags/string/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>redis string operations</title>
+      <link>http://littleworld.me/2016/10/14/redis-string-operations</link>
+      <pubDate>Fri, 14 Oct 2016 16:20:41 +0800</pubDate>
+      
+      <guid>http://littleworld.me/2016/10/14/redis-string-operations</guid>
+      <description>
+
+&lt;p&gt;Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.&lt;/p&gt;
+
+&lt;h2 id=&#34;redis&#34;&gt;Redis&lt;/h2&gt;
+
+&lt;h2 id=&#34;string-operation&#34;&gt;String Operation.&lt;/h2&gt;
+
+&lt;h2 id=&#34;set&#34;&gt;SET&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法: &lt;code&gt;SET key value [EX seconds] [PX milliseconds] [NX|XX]&lt;/code&gt;,整个set系列里功能最完整的一个命令,&lt;code&gt;setnx&lt;/code&gt;,&lt;code&gt;setex&lt;/code&gt;能完成的事情，都可以用&lt;code&gt;set&lt;/code&gt;完成.&lt;/li&gt;
+&lt;li&gt;对于某个原本带有生存时间（TTL）的键来说， 当 SET 命令成功在这个键上执行时， 这个键原有的 TTL 将被清除。&lt;/li&gt;
+&lt;li&gt;即: &lt;strong&gt;set是一个覆盖式写.如果写发生，则对于value和ttl都是覆盖式的&lt;/strong&gt;.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;解释:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;key word&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;EX second&lt;/td&gt;
+&lt;td&gt;设置键的过期时间为 second 秒。 SET key value EX second 效果等同于 SETEX key second value.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;PX millisecond&lt;/td&gt;
+&lt;td&gt;设置键的过期时间为 millisecond 毫秒。 SET key value PX millisecond 效果等同于 PSETEX key millisecond value.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NX&lt;/td&gt;
+&lt;td&gt;只在键不存在时，才对键进行设置操作。 SET key value NX 效果等同于 SETNX key value .&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;XX&lt;/td&gt;
+&lt;td&gt;只在键已经存在时，才对键进行设置操作.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;getbit-setbit-bitcount&#34;&gt;GETBIT/SETBIT/BITCOUNT&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Redis&lt;/code&gt;针对位做操作的支持.&lt;/li&gt;
+&lt;li&gt;用法 : &lt;code&gt;setbit key offset 1&lt;/code&gt;,设置某个key的某个offset为1(当然也可以设置为0,不过因为默认为0.为0的时候不去管理就好了。不过如果是设置为1设置错了或者要重新从1变为0,就可以设置).&lt;code&gt;getbit key offset&lt;/code&gt;,获取key的offset位置的bit值是0还是1.&lt;code&gt;bitcount key [start] [end]&lt;/code&gt;,给出key在指定区间(不指定区间则表示所有),所有bit值为1的个数.&lt;/li&gt;
+&lt;li&gt;模式:
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Bitmap&lt;/strong&gt; 对于一些特定类型的计算非常有效。假设现在我们希望记录自己网站上的用户的&lt;strong&gt;上线频率&lt;/strong&gt;，比如说，计算用户 A 上线了多少天，用户 B 上线了多少天，诸如此类，以此作为数据，从而决定让哪些用户参加 beta 测试等活动 —— 这个模式可以使用 SETBIT 和 BITCOUNT 来实现。&lt;/li&gt;
+&lt;li&gt;以此想到了一个场景,比如每个用户每天只能操作一次的情况.每个月最多31号.维护一个31bit长的redis key即可.每天如果操作了就是1.没操作就是0.每个月做一次数据的删除(keys+del,此时keys跟del非原子,要保证原子性还是得用&lt;code&gt;redis+lua&lt;/code&gt;),不然会可能有人在删除的间隙操作了,这时候由于整个删除机制被干掉了.BUT更好的方式是每天重置之前天的数据就好了.这样所有数据重置的时候没有写入,也就不需要考虑资源征用的问题(&lt;strong&gt;通过避免并发才是最好的性能&lt;/strong&gt;).但是这里最重要的是,一定周期之后要获得用户每天的是否操作的数据,如果不获得则仅仅就用（setnx来做就行,这样每天的数据是一个key.这个key第二次就会由于存在而setnx会返回失败).&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;BIT操作的性能&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;前面的上线次数统计例子，即使运行 10 年，占用的空间也只是每个用户 10*365 比特位(bit)，也即是每个用户 456 字节。对于这种大小的数据来说， BITCOUNT 的处理速度就像 GET 和 INCR 这种 O(1) 复杂度的操作一样快。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;如果你的 bitmap 数据非常大，那么可以考虑使用以下两种方法：&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;将一个大的 bitmap 分散到不同的 key 中，作为小的 bitmap 来处理。使用 Lua 脚本可以很方便地完成这一工作。
+使用 BITCOUNT 的 start 和 end 参数，每次只对所需的部分位进行计算，将位的累积工作(accumulating)放到客户端进行，并且对结果进行缓存 (caching).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;getset&#34;&gt;GETSET&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法 &lt;code&gt;getset key value&lt;/code&gt;,给key设置一个新值,并返回key的旧值(没有旧值返回nil).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;set&lt;/code&gt;命令成功返回的是OK.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;模式:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;GETSET 可以和 INCR 组合使用，实现一个有原子性(atomic)复位操作的计数器(counter)。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;举例来说，每次当某个事件发生时，进程可能对一个名为 mycount 的 key 调用 INCR 操作，通常我们还要在一个原子时间内同时完成获得计数器的值和将计数器值复位为 0 两个操作.实际上在实际过程中,需要在&lt;code&gt;incr&lt;/code&gt;之后还要对&lt;code&gt;incr&lt;/code&gt;的操作结果做判断,然后再复位为0.这时候&lt;code&gt;incr&lt;/code&gt;和&lt;code&gt;getset&lt;/code&gt;之间已经有时间消耗，不再是原子的.这在高并发场景如果不能接受.这时候应该考虑&lt;code&gt;redis+lua&lt;/code&gt;的实现.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis&amp;gt; INCR mycount
+(integer) 11
+
+redis&amp;gt; GETSET mycount 0  # 一个原子内完成 GET mycount 和 SET mycount 0 操作
+&amp;quot;11&amp;quot;
+
+redis&amp;gt; GET mycount       # 计数器被重置
+&amp;quot;0&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;mget&#34;&gt;MGET&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法 &lt;code&gt;mget key1 [key2] [key3...]&lt;/code&gt;,一次返回多个key的值,返回值的顺序和key值的顺序一致.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;如果某个key不存在,该key对应返回的值是nil,该命令永不失败.&lt;/p&gt;
+
+&lt;h2 id=&#34;mset&#34;&gt;MSET&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;用法: &lt;code&gt;MSET key value [key value ...]&lt;/code&gt;,一次设置多个key的值.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;如果某个给定 key 已经存在，那么 &lt;strong&gt;MSET 会用新值覆盖原来的旧值&lt;/strong&gt;，如果这不是你所希望的效果，请考虑使用 &lt;strong&gt;MSETNX 命令：它只会在所有给定 key 都不存在的情况下进行设置操作s&lt;/strong&gt;。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;MSET是一个原子性(atomic)操作&lt;/strong&gt;，所有给定 key 都会在同一时间内被设置，某些给定 key 被更新而另一些给定 key 没有改变的情况，不可能发生.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;命令总是返回OK,因为mset不会失败&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;msetnx&#34;&gt;MSETNX&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法同mset,但是不同的是仅仅在所有key不存在的时候才设置值.如果有任何一个key已经存在,整个msetnx是不执行的.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MSETNX是一个原子性(atomic)操作&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;setex&#34;&gt;SETEX&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法: &lt;code&gt;setex key seconds value&lt;/code&gt;,含义: set expire.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;最终结果等价于&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;set key value
+expire key seconds
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;与以上命令的区别:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;setex是一个原子操作,关联key和value的同时设置了超时时间.但是一旦用set+expire组合来实现的时候,至少是两个命令.这时候中间至少有 &lt;code&gt;set返回+expire命令发送的时间间隔&lt;/code&gt;,如果set和expire在发送到redis之间有别的操作,间隔时间就会更长.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;psetex&#34;&gt;PSETEX&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法: &lt;code&gt;psetex key milliseconds value&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;这个命令和 SETEX 命令相似，但&lt;strong&gt;它以毫秒为单位设置 key 的生存时间，而不是像 SETEX 命令那样，以秒为单位&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;setnx&#34;&gt;SETNX&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法: &lt;code&gt;setnx key value&lt;/code&gt;,含义:set if not exist.&lt;/li&gt;
+&lt;li&gt;注意: &lt;strong&gt;setnx不支持设置超时时间&lt;/strong&gt;，仅仅能给key设置一个不带超时的值.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;模式: 可以用在只能操作一次的场景.比如 每天只能签到一次.这时候第二次来接口重复性验证就可以redis直接完成(速度更快).每次操作如果不是永远有效.往往还需要设置一个expire的时间.这时候如果用&lt;code&gt;setnx+expire&lt;/code&gt;不能保证原子性.则需要用&lt;code&gt;set+NX&lt;/code&gt;命令来实现&lt;/p&gt;
+
+&lt;h2 id=&#34;setrange&#34;&gt;SETRANGE&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;用法:&lt;code&gt;setrange key offset value&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;最简总结:&lt;strong&gt;override从offset开始的数据,如果offset之前无内容用&amp;rdquo;\x00&amp;rdquo;填充,key不存在,相当于整个内容最初就是空的&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;SETRANGE 命令会确保字符串足够长以便将 value 设置在指定的偏移量上，如果给定 key 原来储存的字符串长度比偏移量小(比如字符串只有 5 个字符长，但你设置的 offset 是 10 )，那么原字符和偏移量之间的空白将用零字节(zerobytes, &amp;ldquo;\x00&amp;rdquo; )来填充。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;getrange&#34;&gt;GETRANGE&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法: &lt;code&gt;getrange key start end&lt;/code&gt;,返回key对应的value的从start到end的内容(包含start和end).&lt;/li&gt;
+&lt;li&gt;如果key不存在的时候，返回的是空字符串.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ttl&#34;&gt;TTL&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法: &lt;code&gt;ttl key&lt;/code&gt;,得到key的超时时间.返回的单位为秒.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;不同返回值的含义&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; -1 -- 如果key没有超时时间,则返回-1.
+ -2 -- 如果key不存在,返回-2.
+ 否则以秒为大内，返回key的超时剩余时间.
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;incr-decr-incrby-decrby&#34;&gt;INCR/DECR/INCRBY/DECRBY&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法 : &lt;code&gt;incr/decr key&lt;/code&gt;对key做加/减1.&lt;code&gt;incrby/decrby key incrementVal/decrementVal&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;如果 key 不存在，那么 key 的值会先被初始化为 0,然后再执行操作.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;strlen&#34;&gt;STRLEN&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用法： &lt;code&gt;strlen key&lt;/code&gt;,返回一个string value的长度.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
