@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-    <title>String &middot; Little World</title>
+    <title>Redis Lock &middot; Little World</title>
     <meta name="generator" content="Hugo 0.17-DEV" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -9,9 +9,6 @@
     
       <meta name="description" content="Hello,World!">
     
-    
-      <link href="http://littleworld.me/tags/string/index.xml" rel="alternate" type="application/rss+xml" title="Little World" />
-      <link href="http://littleworld.me/tags/string/index.xml" rel="feed" type="application/rss+xml" title="Little World" />
     
     <link rel="icon" href="http://littleworld.me/favicon.ico">
     <link rel="apple-touch-icon" href="http://littleworld.me/apple-touch-icon.png" />
@@ -21,29 +18,50 @@
     <link rel="stylesheet" href="http://littleworld.me/fancybox/jquery.fancybox.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-    <meta property="og:title" content="String" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="http://littleworld.me/tags/string/" />
+    <meta property="og:title" content="Redis Lock" />
+<meta property="og:description" content="simple distributed lock on redis and how to improve it with the redlock algorithm.the pros and cons the redlock algorithm.
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://littleworld.me/2016/10/16/redis-lock" />
 
 
-<meta property="og:updated_time" content="2016-10-14T16:20:41&#43;08:00"/>
-
-
-
-
+<meta property="og:updated_time" content="2016-10-16T14:07:41&#43;08:00"/>
 
 
 
 
 
-    
-    
-<meta itemprop="name" content="String">
-<meta itemprop="description" content="">
+
+
+
 
 
     
+    
+<meta itemprop="name" content="Redis Lock">
+<meta itemprop="description" content="simple distributed lock on redis and how to improve it with the redlock algorithm.the pros and cons the redlock algorithm.
+">
+
+
+<meta itemprop="dateModified" content="2016-10-16T14:07:41&#43;08:00" />
+<meta itemprop="wordCount" content="478">
+
+
+
+<meta itemprop="keywords" content="cache,programming,distribute,lock,poi,queue,rabbitmq,rate-limit,redis,string," />
+
+    
+
+  <meta name="twitter:card" content="summary"/>
+
+
+
+<meta name="twitter:title" content="Redis Lock"/>
+<meta name="twitter:description" content="simple distributed lock on redis and how to improve it with the redlock algorithm.the pros and cons the redlock algorithm.
+"/>
+<meta name="twitter:site" content="@cilendeng"/>
+
+
     
 
     
@@ -53,7 +71,7 @@
 
 
 <div id="container">
-    <header id="header">
+	<header id="header">
   <div id="header-main" class="header-inner">
     <div class="outer">
       <a href="http://littleworld.me/" id="logo">
@@ -141,8 +159,10 @@
   </div>
 </header>
 
-    <div class="outer">
-        <aside id="profile">
+   	
+   	<div class="outer">
+   		
+	    <aside id="profile">
   <div class="inner profile-inner">
     <div class="base-info profile-block">
       <img id="avatar" src="http://littleworld.me/css/images/avatar.png">
@@ -229,51 +249,219 @@
 <td><a href="//twitter.com/cilendeng" target="_blank" title="Twitter"><i class="fa fa-twitter"></i></a></td>
 
 
-          <td><a href="http://littleworld.me/tags/string/index.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></td>
+          <td><a href="" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></td>
         </tr>
       </table>
     </div>
   </div>
 </aside>
 
-        <section id="main">
-            <section class="archives-wrap">
-                <div class="archive-category-wrap">
-                    <span class="archive-category">String</span>
-                </div>
-                <div class="archives">
-                    
-                    
-                        <article class="archive-article archive-type-post">
-    <div class="archive-article-inner">
-        <div class="archive-article-thumbnail">
-            
-            <a href="http://littleworld.me/2016/10/14/redis-string-operations" class="thumbnail">
-                <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="redis string operations" class="thumbnail-image"></span>
-            </a>
-            
-        </div>
-        <header class="archive-article-header">
-            <h1 itemprop="name">
-            <a class="archive-article-title" href="http://littleworld.me/2016/10/14/redis-string-operations">redis string operations</a>
-            </h1>
-            <div class="archive-article-date">
-                <i class="fa fa-calendar"></i>
-                <time datetime="2016-10-14 16:20:41 &#43;0800 CST" itemprop="datePublished">2016-10-14</time>
-            </div>
-        </header>
-    </div>
-</article>
- 
-                    
-                </div>
-            </section>
-            <nav id="page-nav">
+	    
 
+	    
+<section id="main">
+
+    <article id="page-undefined" class="article article-type-page" itemscope="" itemprop="blogPost">
+        <div class="article-inner">
+            
+                <img src="http://littleworld.me/banners/redis.jpg" class="article-banner">
+            
+
+            <header class="article-header">
+    <a href="http://littleworld.me/2016/10/16/redis-lock">
+    <h1 class="article-title" itemprop="name">
+        Redis Lock
+    </h1>
+    </a>
+    <div class="article-meta">
+        <div class="article-date">
+            <i class="fa fa-calendar"></i>
+            <time datetime="2016-10-16 14:07:41 &#43;0800 CST" itemprop="datePublished">2016-10-16</time>
+            &middot;
+            478
+            words
+            &middot;
+            3
+            minute read
+        </div>
+
+        
+        
+            
+            
+            <div class="article-category">
+                <i class="fa fa-folder"></i>
+                
+                <a class="article-category-link" href="http://littleworld.me/categories/programming">programming</a>
+                &middot;
+                
+                <a class="article-category-link" href="http://littleworld.me/categories/cache">cache</a>
+                
+                
+            </div>
+            
+        
+
+        
+            
+            
+            <div class="article-category">
+                <i class="fa fa-tags"></i>
+                
+                <a class="article-category-link" href="http://littleworld.me/tags/redis">redis</a>
+                &middot;
+                
+                <a class="article-category-link" href="http://littleworld.me/tags/distribute">distribute</a>
+                &middot;
+                
+                <a class="article-category-link" href="http://littleworld.me/tags/lock">lock</a>
+                
+                
+            </div>
+            
+        
+    </div>
+</header>
+
+            <div class="article-entry" itemprop="articleBody">
+                
+
+<p>simple distributed lock on redis and how to improve it with the redlock algorithm.the pros and cons the redlock algorithm.</p>
+
+<p>+++
+title = &ldquo;redis string operations&rdquo;
+date = &ldquo;2016-10-14T16:20:41+08:00&rdquo;
+tags = [&ldquo;redis&rdquo;,&ldquo;string&rdquo;,&ldquo;rate limit&rdquo;]
+categories = [&ldquo;programming&rdquo;,&ldquo;cache&rdquo;]
+menu = &ldquo;&rdquo;
+banner = &ldquo;banners/redis.jpg&rdquo;
++++
+Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.</p>
+
+<h1 id="redis-lock">Redis Lock</h1>
+
+<h2 id="introduction-usage">Introduction/Usage</h2>
+
+<p>In distributed system,use distributed lock to guarantee serial operation for avoiding race-condition conflicts.</p>
+
+<ul>
+<li><p>Simple Solution</p>
+
+<ul>
+<li>set a key value only when the key is not existed.In case of the client crash,the lock on the key will not be removed,we add expire time on the key .the whole operation can be like the following.
+<br /></li>
+</ul>
+
+<pre><code> SET resource_name my_random_value NX PX 30000
+</code></pre>
+
+<ul>
+<li><p>The above command should guarantee the <strong>value should be unique among all the requests</strong>,because there can be senarios,like :a client may acquire the lock, get blocked in some operation for longer than the lock validity time (the time at which the key will expire), and later remove the lock, that was already acquired by some other client.so the lock can&rsquo;t be just removed by the key. It should be done like this lua script:</p>
+
+<pre><code class="language-lua">if redis.call(&quot;get&quot;,KEYS[1]) == ARGV[1] then
+return redis.call(&quot;del&quot;,KEYS[1])
+else
+    return 0
+end
+</code></pre></li>
+</ul></li>
+
+<li><p>More Complicated Solution</p>
+
+<ul>
+<li>The Simple solution is not ok under the condition that:
+
+<ol>
+<li>the redis node crashed,the slave hasn&rsquo;t synced from the master to get the lock.the above solution will fail.</li>
+</ol></li>
+<li>The redis official site gives an algorithm called <code>The Redlock algorithm</code> to provide a more  robust distributed-lock feature.</li>
+<li>the doc and implementations can be found here <a href="http://redis.io/topics/distlock">the redlock algorithm</a>.
+<br /></li>
+</ul></li>
+
+<li><p>Pros and Cons on the Redlock algorithm
+what are the distributed locks for:</p>
+
+<blockquote>
+<p>Efficiency: Taking a lock saves you from unnecessarily doing the same work twice (e.g. some expensive computation). If the lock fails and two nodes end up doing the same piece of work, the result is a minor increase in cost (you end up paying 5 cents more to AWS than you otherwise would have) or a minor inconvenience (e.g. a user ends up getting the same email notification twice).</p>
+
+<p>Correctness: Taking a lock prevents concurrent processes from stepping on each others’ toes and messing up the state of your system. If the lock fails and two nodes concurrently work on the same piece of data, the result is a corrupted file, data loss, permanent inconsistency, the wrong dose of a drug administered to a patient, or some other serious problem.</p>
+</blockquote></li>
+
+<li><p><code>The redlock algorithm</code> solves the sigal node problems ,but brings up more problems which are existed natuarally  in the distributed system.But the redlock algorithm did not solve them all.</p></li>
+
+<li><p>conclusion</p>
+
+<ul>
+<li>Redis may not be a good option for distributed lock if you want it for its correctness.but for efficiency ,it&rsquo;s good enough.</li>
+</ul></li>
+</ul>
+
+<p>Check the total pros and cons from the below address.</p>
+
+<blockquote>
+<p><a href="http://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html">How to do distributed locking</a>.</p>
+
+<p><a href="http://antirez.com/news/101">Is Redlock Safe</a></p>
+</blockquote>
+
+            </div>
+            <footer class="article-footer">
+    <a data-url="http://littleworld.me/2016/10/16/redis-lock" data-id="c2d1b57869b945811667bd73f65f8efa" class="article-share-link">
+        Share
+    </a>
+    
+    <a href="http://littleworld.me/2016/10/16/redis-lock/#disqus_thread" class="article-comment-link">
+        Comments
+    </a>
+    
+</footer>
+
+        </div>
+
+        
+<nav id="article-nav">
+    
+    <a href="http://littleworld.me/2016/10/14/redis-string-operations" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">
+          Older
+      </strong>
+      <div class="article-nav-title">redis string operations</div>
+    </a>
+    
+
+    
 </nav>
 
-        </section>
-        <aside id="sidebar">
+
+    </article>
+
+    
+    <section id="comments">
+        <div id="disqus_thread">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'carbingun';
+    var disqus_identifier = 'http:\/\/littleworld.me\/2016\/10\/16\/redis-lock';
+    var disqus_title = 'Redis Lock';
+    var disqus_url = 'http:\/\/littleworld.me\/2016\/10\/16\/redis-lock';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </section>
+    
+</section>
+
+
+	    
+	    <aside id="sidebar">
     
 <div class="widget-wrap">
     <h3 class="widget-title">
@@ -286,7 +474,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/16/redis-lock" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="String" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="Redis Lock" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -311,7 +499,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/14/redis-string-operations" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="String" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="Redis Lock" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -336,7 +524,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/31/excel-export-by-poi" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="String" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="Redis Lock" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -361,7 +549,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/24/rabbitmq" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/RabbitMQ.png)" alt="String" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/RabbitMQ.png)" alt="Redis Lock" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -521,7 +709,8 @@
     <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
 
-    </div>
+	    
+	</div>
 </div>
 
 <footer id="footer">

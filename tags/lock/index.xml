@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lock on Little World</title>
+    <link>http://littleworld.me/tags/lock/</link>
+    <description>Recent content in Lock on Little World</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 16 Oct 2016 14:07:41 +0800</lastBuildDate>
+    <atom:link href="http://littleworld.me/tags/lock/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Redis Lock</title>
+      <link>http://littleworld.me/2016/10/16/redis-lock</link>
+      <pubDate>Sun, 16 Oct 2016 14:07:41 +0800</pubDate>
+      
+      <guid>http://littleworld.me/2016/10/16/redis-lock</guid>
+      <description>
+
+&lt;p&gt;simple distributed lock on redis and how to improve it with the redlock algorithm.the pros and cons the redlock algorithm.&lt;/p&gt;
+
+&lt;p&gt;+++
+title = &amp;ldquo;redis string operations&amp;rdquo;
+date = &amp;ldquo;2016-10-14T16:20:41+08:00&amp;rdquo;
+tags = [&amp;ldquo;redis&amp;rdquo;,&amp;ldquo;string&amp;rdquo;,&amp;ldquo;rate limit&amp;rdquo;]
+categories = [&amp;ldquo;programming&amp;rdquo;,&amp;ldquo;cache&amp;rdquo;]
+menu = &amp;ldquo;&amp;rdquo;
+banner = &amp;ldquo;banners/redis.jpg&amp;rdquo;
++++
+Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.&lt;/p&gt;
+
+&lt;h1 id=&#34;redis-lock&#34;&gt;Redis Lock&lt;/h1&gt;
+
+&lt;h2 id=&#34;introduction-usage&#34;&gt;Introduction/Usage&lt;/h2&gt;
+
+&lt;p&gt;In distributed system,use distributed lock to guarantee serial operation for avoiding race-condition conflicts.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Simple Solution&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;set a key value only when the key is not existed.In case of the client crash,the lock on the key will not be removed,we add expire time on the key .the whole operation can be like the following.
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt; SET resource_name my_random_value NX PX 30000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The above command should guarantee the &lt;strong&gt;value should be unique among all the requests&lt;/strong&gt;,because there can be senarios,like :a client may acquire the lock, get blocked in some operation for longer than the lock validity time (the time at which the key will expire), and later remove the lock, that was already acquired by some other client.so the lock can&amp;rsquo;t be just removed by the key. It should be done like this lua script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lua&#34;&gt;if redis.call(&amp;quot;get&amp;quot;,KEYS[1]) == ARGV[1] then
+return redis.call(&amp;quot;del&amp;quot;,KEYS[1])
+else
+    return 0
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;More Complicated Solution&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The Simple solution is not ok under the condition that:
+
+&lt;ol&gt;
+&lt;li&gt;the redis node crashed,the slave hasn&amp;rsquo;t synced from the master to get the lock.the above solution will fail.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;The redis official site gives an algorithm called &lt;code&gt;The Redlock algorithm&lt;/code&gt; to provide a more  robust distributed-lock feature.&lt;/li&gt;
+&lt;li&gt;the doc and implementations can be found here &lt;a href=&#34;http://redis.io/topics/distlock&#34;&gt;the redlock algorithm&lt;/a&gt;.
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Pros and Cons on the Redlock algorithm
+what are the distributed locks for:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Efficiency: Taking a lock saves you from unnecessarily doing the same work twice (e.g. some expensive computation). If the lock fails and two nodes end up doing the same piece of work, the result is a minor increase in cost (you end up paying 5 cents more to AWS than you otherwise would have) or a minor inconvenience (e.g. a user ends up getting the same email notification twice).&lt;/p&gt;
+
+&lt;p&gt;Correctness: Taking a lock prevents concurrent processes from stepping on each others’ toes and messing up the state of your system. If the lock fails and two nodes concurrently work on the same piece of data, the result is a corrupted file, data loss, permanent inconsistency, the wrong dose of a drug administered to a patient, or some other serious problem.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;The redlock algorithm&lt;/code&gt; solves the sigal node problems ,but brings up more problems which are existed natuarally  in the distributed system.But the redlock algorithm did not solve them all.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;conclusion&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Redis may not be a good option for distributed lock if you want it for its correctness.but for efficiency ,it&amp;rsquo;s good enough.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Check the total pros and cons from the below address.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;http://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html&#34;&gt;How to do distributed locking&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://antirez.com/news/101&#34;&gt;Is Redlock Safe&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
