@@ -74,9 +74,9 @@ end
 what are the distributed locks for:&lt;/p&gt;
 
 &lt;blockquote&gt;
-&lt;p&gt;Efficiency: Taking a lock saves you from unnecessarily doing the same work twice (e.g. some expensive computation). If the lock fails and two nodes end up doing the same piece of work, the result is a minor increase in cost (you end up paying 5 cents more to AWS than you otherwise would have) or a minor inconvenience (e.g. a user ends up getting the same email notification twice).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Efficiency&lt;/strong&gt;: Taking a lock saves you from unnecessarily doing the same work twice (e.g. some expensive computation). If the lock fails and two nodes end up doing the same piece of work, the result is a minor increase in cost (you end up paying 5 cents more to AWS than you otherwise would have) or a minor inconvenience (e.g. a user ends up getting the same email notification twice).&lt;/p&gt;
 
-&lt;p&gt;Correctness: Taking a lock prevents concurrent processes from stepping on each others’ toes and messing up the state of your system. If the lock fails and two nodes concurrently work on the same piece of data, the result is a corrupted file, data loss, permanent inconsistency, the wrong dose of a drug administered to a patient, or some other serious problem.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Correctness&lt;/strong&gt;: Taking a lock prevents concurrent processes from stepping on each others’ toes and messing up the state of your system. If the lock fails and two nodes concurrently work on the same piece of data, the result is a corrupted file, data loss, permanent inconsistency, the wrong dose of a drug administered to a patient, or some other serious problem.&lt;/p&gt;
 &lt;/blockquote&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;&lt;code&gt;The redlock algorithm&lt;/code&gt; solves the sigal node problems ,but brings up more problems which are existed natuarally  in the distributed system.But the redlock algorithm did not solve them all.&lt;/p&gt;&lt;/li&gt;
