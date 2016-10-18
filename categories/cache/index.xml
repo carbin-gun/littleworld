@@ -19,16 +19,6 @@
 
 &lt;p&gt;simple distributed lock on redis and how to improve it with the redlock algorithm.the pros and cons the redlock algorithm.&lt;/p&gt;
 
-&lt;p&gt;+++
-title = &amp;ldquo;redis string operations&amp;rdquo;
-date = &amp;ldquo;2016-10-14T16:20:41+08:00&amp;rdquo;
-tags = [&amp;ldquo;redis&amp;rdquo;,&amp;ldquo;string&amp;rdquo;,&amp;ldquo;rate limit&amp;rdquo;]
-categories = [&amp;ldquo;programming&amp;rdquo;,&amp;ldquo;cache&amp;rdquo;]
-menu = &amp;ldquo;&amp;rdquo;
-banner = &amp;ldquo;banners/redis.jpg&amp;rdquo;
-+++
-Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.&lt;/p&gt;
-
 &lt;h1 id=&#34;redis-lock&#34;&gt;Redis Lock&lt;/h1&gt;
 
 &lt;h2 id=&#34;introduction-usage&#34;&gt;Introduction/Usage&lt;/h2&gt;

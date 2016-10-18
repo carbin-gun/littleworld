@@ -6,8 +6,162 @@
     <description>Recent content in Programming on Little World</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 16 Oct 2016 14:07:41 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 18 Oct 2016 12:00:00 +0800</lastBuildDate>
     <atom:link href="http://littleworld.me/categories/programming/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>golang build tags</title>
+      <link>http://littleworld.me/2016/10/18/golang-build-tags</link>
+      <pubDate>Tue, 18 Oct 2016 12:00:00 +0800</pubDate>
+      
+      <guid>http://littleworld.me/2016/10/18/golang-build-tags</guid>
+      <description>
+
+&lt;p&gt;golang build tags introduction,and some tricks for it.&lt;/p&gt;
+
+&lt;h1 id=&#34;golang-build-tags&#34;&gt;golang build tags&lt;/h1&gt;
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;A build constraint, also known as a build tag, is a line comment that begins&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// +build
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;that lists the conditions under which a file should be included in the package&lt;/strong&gt;. Constraints may appear in any kind of source file (not just Go), but they must appear near the top of the file, preceded only by blank lines and other line comments. These rules mean that in Go files a build constraint must appear before the package clause.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;To distinguish build constraints from package documentation, a series of build constraints must be followed by a blank line.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;A build constraint is evaluated as the OR of space-separated options; each option evaluates as the AND of its comma-separated terms; and each term is an alphanumeric word or, preceded by !, its negation. That is, the build constraint:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-golang&#34;&gt;// +build linux,386 darwin,!cgo
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;corresponds to the boolean formula:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-golang&#34;&gt;// +build (linux AND 386) OR (darwin AND (NOT cgo))`
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;A file may have multiple build constraints. The overall constraint is the AND of the individual constraints. That is, the build constraints:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// +build linux darwin
+// +build 386
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;corresponds to the boolean formula:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// +build (linux OR darwin) AND 386
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If a file&amp;rsquo;s name, after stripping the extension and a possible _test suffix, matches any of the following patterns:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;*_GOOS
+*_GOARCH
+*_GOOS_GOARCH
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(example: source_windows_amd64.go) where &lt;strong&gt;GOOS and GOARCH represent any known operating system and architecture values respectively, then the file is considered to have an implicit build constraint requiring those terms (in addition to any explicit constraints in the file)&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;To keep a file from being considered for the build:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// +build ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(any other unsatisfied word will work as well, but “ignore” is conventional.)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;common-usage&#34;&gt;Common Usage&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;build the source for different platform.all the platforms defined by the &lt;code&gt;GOOS&lt;/code&gt; and &lt;code&gt;GOARCH&lt;/code&gt;are included by the &lt;code&gt;src/go/build/syslist.go&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package build
+
+const goosList = &amp;quot;android darwin dragonfly freebsd linux nacl netbsd openbsd plan9 solaris windows &amp;quot;
+const goarchList = &amp;quot;386 amd64 amd64p32 arm armbe arm64 arm64be ppc64 ppc64le mips mipsle mips64 mips64le mips64p32 mips64p32le ppc s390 s390x sparc sparc64 &amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;tricks&#34;&gt;Tricks&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;prodivde different implementation for different environment,but the environment may not be the &lt;code&gt;GOOS&lt;/code&gt; or &lt;code&gt;GOARCH&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;appengine&lt;/code&gt; the build tag has been used by many lib.it&amp;rsquo;s neither &lt;code&gt;GOOS&lt;/code&gt; or &lt;code&gt;GOARCH&lt;/code&gt;.it&amp;rsquo;s self-defined.&lt;/li&gt;
+&lt;li&gt;we can define the build tag to build different binary software according to our self-defined build tags.like the appengine do .but we can not use the implicit way( &lt;code&gt;GOOS&lt;/code&gt; or &lt;code&gt;GOARCH&lt;/code&gt; included in the file name),it will not be recognized by the go compiler.&lt;/li&gt;
+&lt;li&gt;we can use the explicit build tag comment.&lt;/li&gt;
+&lt;li&gt;like this example:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;main.go&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; ```golang
+package main
+
+import (
+    &amp;quot;fanfu-golang/buildtags/lib&amp;quot;
+)
+func main(){
+    lib.Tell()
+}
+
+```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;lib/dev.go&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;```golang
+// +build !prod
+
+package lib
+
+import &amp;quot;fmt&amp;quot;
+
+func Tell(){
+    fmt.Println(&amp;quot;hello from dev&amp;quot;)
+}
+
+```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;lib/prod.go&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;```golang
+// +build prod
+
+package lib
+
+import &amp;quot;fmt&amp;quot;
+
+func Tell(){
+    fmt.Println(&amp;quot;hello from dev&amp;quot;)
+}
+
+```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;we can build with &lt;code&gt;go build&lt;/code&gt; and execute.it will output.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ go build
+$ ./buildtags
+hello from dev
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;but when we build with &lt;code&gt;go build --tags prod&lt;/code&gt; and execute the binary,the output will be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go build --tags prod
+$ ./buildtags
+hello from prod
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As to the above example,we use the !prod to match our default env build.Also,we can setup different build tags for different environment,and specify the build tags with every build without default to make it more explicit.&lt;/p&gt;
+
+&lt;h2 id=&#34;eof&#34;&gt;EOF&lt;/h2&gt;
+</description>
+    </item>
     
     <item>
       <title>Redis Lock</title>
@@ -18,16 +172,6 @@
       <description>
 
 &lt;p&gt;simple distributed lock on redis and how to improve it with the redlock algorithm.the pros and cons the redlock algorithm.&lt;/p&gt;
-
-&lt;p&gt;+++
-title = &amp;ldquo;redis string operations&amp;rdquo;
-date = &amp;ldquo;2016-10-14T16:20:41+08:00&amp;rdquo;
-tags = [&amp;ldquo;redis&amp;rdquo;,&amp;ldquo;string&amp;rdquo;,&amp;ldquo;rate limit&amp;rdquo;]
-categories = [&amp;ldquo;programming&amp;rdquo;,&amp;ldquo;cache&amp;rdquo;]
-menu = &amp;ldquo;&amp;rdquo;
-banner = &amp;ldquo;banners/redis.jpg&amp;rdquo;
-+++
-Notes about the commands of Redis String operations.Especially some scenarios that would be much useful.&lt;/p&gt;
 
 &lt;h1 id=&#34;redis-lock&#34;&gt;Redis Lock&lt;/h1&gt;
 

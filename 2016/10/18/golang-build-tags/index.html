@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-    <title>Poi &middot; Little World</title>
+    <title>golang build tags &middot; Little World</title>
     <meta name="generator" content="Hugo 0.17-DEV" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -9,9 +9,6 @@
     
       <meta name="description" content="Hello,World!">
     
-    
-      <link href="http://littleworld.me/tags/poi/index.xml" rel="alternate" type="application/rss+xml" title="Little World" />
-      <link href="http://littleworld.me/tags/poi/index.xml" rel="feed" type="application/rss+xml" title="Little World" />
     
     <link rel="icon" href="http://littleworld.me/favicon.ico">
     <link rel="apple-touch-icon" href="http://littleworld.me/apple-touch-icon.png" />
@@ -21,29 +18,50 @@
     <link rel="stylesheet" href="http://littleworld.me/fancybox/jquery.fancybox.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-    <meta property="og:title" content="Poi" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="http://littleworld.me/tags/poi/" />
+    <meta property="og:title" content="golang build tags" />
+<meta property="og:description" content="golang build tags introduction,and some tricks for it.
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://littleworld.me/2016/10/18/golang-build-tags" />
 
 
-<meta property="og:updated_time" content="2016-07-31T20:54:41&#43;08:00"/>
-
-
-
-
+<meta property="og:updated_time" content="2016-10-18T12:00:00&#43;08:00"/>
 
 
 
 
 
-    
-    
-<meta itemprop="name" content="Poi">
-<meta itemprop="description" content="">
+
+
+
 
 
     
+    
+<meta itemprop="name" content="golang build tags">
+<meta itemprop="description" content="golang build tags introduction,and some tricks for it.
+">
+
+
+<meta itemprop="dateModified" content="2016-10-18T12:00:00&#43;08:00" />
+<meta itemprop="wordCount" content="566">
+
+
+
+<meta itemprop="keywords" content="cache,golang,programming,distribute,golang,lock,poi,queue,rabbitmq,rate-limit,redis,string," />
+
+    
+
+  <meta name="twitter:card" content="summary"/>
+
+
+
+<meta name="twitter:title" content="golang build tags"/>
+<meta name="twitter:description" content="golang build tags introduction,and some tricks for it.
+"/>
+<meta name="twitter:site" content="@cilendeng"/>
+
+
     
 
     
@@ -53,7 +71,7 @@
 
 
 <div id="container">
-    <header id="header">
+	<header id="header">
   <div id="header-main" class="header-inner">
     <div class="outer">
       <a href="http://littleworld.me/" id="logo">
@@ -141,8 +159,10 @@
   </div>
 </header>
 
-    <div class="outer">
-        <aside id="profile">
+   	
+   	<div class="outer">
+   		
+	    <aside id="profile">
   <div class="inner profile-inner">
     <div class="base-info profile-block">
       <img id="avatar" src="http://littleworld.me/css/images/avatar.png">
@@ -229,51 +249,278 @@
 <td><a href="//twitter.com/cilendeng" target="_blank" title="Twitter"><i class="fa fa-twitter"></i></a></td>
 
 
-          <td><a href="http://littleworld.me/tags/poi/index.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></td>
+          <td><a href="" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></td>
         </tr>
       </table>
     </div>
   </div>
 </aside>
 
-        <section id="main">
-            <section class="archives-wrap">
-                <div class="archive-category-wrap">
-                    <span class="archive-category">Poi</span>
-                </div>
-                <div class="archives">
-                    
-                    
-                        <article class="archive-article archive-type-post">
-    <div class="archive-article-inner">
-        <div class="archive-article-thumbnail">
-            
-            <a href="http://littleworld.me/2016/07/31/excel-export-by-poi" class="thumbnail">
-                <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="excel export by poi" class="thumbnail-image"></span>
-            </a>
-            
-        </div>
-        <header class="archive-article-header">
-            <h1 itemprop="name">
-            <a class="archive-article-title" href="http://littleworld.me/2016/07/31/excel-export-by-poi">excel export by poi</a>
-            </h1>
-            <div class="archive-article-date">
-                <i class="fa fa-calendar"></i>
-                <time datetime="2016-07-31 20:54:41 &#43;0800 CST" itemprop="datePublished">2016-07-31</time>
-            </div>
-        </header>
-    </div>
-</article>
- 
-                    
-                </div>
-            </section>
-            <nav id="page-nav">
+	    
 
+	    
+<section id="main">
+
+    <article id="page-undefined" class="article article-type-page" itemscope="" itemprop="blogPost">
+        <div class="article-inner">
+            
+                <img src="http://littleworld.me/banners/go.jpeg" class="article-banner">
+            
+
+            <header class="article-header">
+    <a href="http://littleworld.me/2016/10/18/golang-build-tags">
+    <h1 class="article-title" itemprop="name">
+        golang build tags
+    </h1>
+    </a>
+    <div class="article-meta">
+        <div class="article-date">
+            <i class="fa fa-calendar"></i>
+            <time datetime="2016-10-18 12:00:00 &#43;0800 CST" itemprop="datePublished">2016-10-18</time>
+            &middot;
+            566
+            words
+            &middot;
+            3
+            minute read
+        </div>
+
+        
+        
+            
+            
+            <div class="article-category">
+                <i class="fa fa-folder"></i>
+                
+                <a class="article-category-link" href="http://littleworld.me/categories/programming">programming</a>
+                &middot;
+                
+                <a class="article-category-link" href="http://littleworld.me/categories/golang">golang</a>
+                
+                
+            </div>
+            
+        
+
+        
+            
+            
+            <div class="article-category">
+                <i class="fa fa-tags"></i>
+                
+                <a class="article-category-link" href="http://littleworld.me/tags/golang">golang</a>
+                
+                
+            </div>
+            
+        
+    </div>
+</header>
+
+            <div class="article-entry" itemprop="articleBody">
+                
+
+<p>golang build tags introduction,and some tricks for it.</p>
+
+<h1 id="golang-build-tags">golang build tags</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<ul>
+<li><p>A build constraint, also known as a build tag, is a line comment that begins</p>
+
+<pre><code>// +build
+</code></pre>
+
+<p><strong>that lists the conditions under which a file should be included in the package</strong>. Constraints may appear in any kind of source file (not just Go), but they must appear near the top of the file, preceded only by blank lines and other line comments. These rules mean that in Go files a build constraint must appear before the package clause.</p></li>
+
+<li><p>To distinguish build constraints from package documentation, a series of build constraints must be followed by a blank line.</p></li>
+
+<li><p>A build constraint is evaluated as the OR of space-separated options; each option evaluates as the AND of its comma-separated terms; and each term is an alphanumeric word or, preceded by !, its negation. That is, the build constraint:</p>
+
+<pre><code class="language-golang">// +build linux,386 darwin,!cgo
+
+</code></pre>
+
+<p>corresponds to the boolean formula:</p>
+
+<pre><code class="language-golang">// +build (linux AND 386) OR (darwin AND (NOT cgo))`
+</code></pre></li>
+
+<li><p>A file may have multiple build constraints. The overall constraint is the AND of the individual constraints. That is, the build constraints:</p>
+
+<pre><code>// +build linux darwin
+// +build 386
+</code></pre>
+
+<p>corresponds to the boolean formula:</p>
+
+<pre><code>// +build (linux OR darwin) AND 386
+</code></pre></li>
+
+<li><p>If a file&rsquo;s name, after stripping the extension and a possible _test suffix, matches any of the following patterns:</p>
+
+<pre><code>*_GOOS
+*_GOARCH
+*_GOOS_GOARCH
+</code></pre>
+
+<p>(example: source_windows_amd64.go) where <strong>GOOS and GOARCH represent any known operating system and architecture values respectively, then the file is considered to have an implicit build constraint requiring those terms (in addition to any explicit constraints in the file)</strong>.</p></li>
+
+<li><p>To keep a file from being considered for the build:</p>
+
+<pre><code>// +build ignore
+</code></pre>
+
+<p>(any other unsatisfied word will work as well, but “ignore” is conventional.)</p></li>
+</ul>
+
+<h2 id="common-usage">Common Usage</h2>
+
+<ul>
+<li><p>build the source for different platform.all the platforms defined by the <code>GOOS</code> and <code>GOARCH</code>are included by the <code>src/go/build/syslist.go</code>:</p>
+
+<pre><code>package build
+
+const goosList = &quot;android darwin dragonfly freebsd linux nacl netbsd openbsd plan9 solaris windows &quot;
+const goarchList = &quot;386 amd64 amd64p32 arm armbe arm64 arm64be ppc64 ppc64le mips mipsle mips64 mips64le mips64p32 mips64p32le ppc s390 s390x sparc sparc64 &quot;
+</code></pre></li>
+</ul>
+
+<h2 id="tricks">Tricks</h2>
+
+<ul>
+<li>prodivde different implementation for different environment,but the environment may not be the <code>GOOS</code> or <code>GOARCH</code>.</li>
+<li><code>appengine</code> the build tag has been used by many lib.it&rsquo;s neither <code>GOOS</code> or <code>GOARCH</code>.it&rsquo;s self-defined.</li>
+<li>we can define the build tag to build different binary software according to our self-defined build tags.like the appengine do .but we can not use the implicit way( <code>GOOS</code> or <code>GOARCH</code> included in the file name),it will not be recognized by the go compiler.</li>
+<li>we can use the explicit build tag comment.</li>
+<li>like this example:</li>
+</ul>
+
+<p>main.go</p>
+
+<pre><code> ```golang
+package main
+
+import (
+    &quot;fanfu-golang/buildtags/lib&quot;
+)
+func main(){
+    lib.Tell()
+}
+
+```
+</code></pre>
+
+<p>lib/dev.go</p>
+
+<pre><code>```golang
+// +build !prod
+
+package lib
+
+import &quot;fmt&quot;
+
+func Tell(){
+    fmt.Println(&quot;hello from dev&quot;)
+}
+
+```
+</code></pre>
+
+<p>lib/prod.go</p>
+
+<pre><code>```golang
+// +build prod
+
+package lib
+
+import &quot;fmt&quot;
+
+func Tell(){
+    fmt.Println(&quot;hello from dev&quot;)
+}
+
+```
+</code></pre>
+
+<p>we can build with <code>go build</code> and execute.it will output.</p>
+
+<pre><code class="language-bash">$ go build
+$ ./buildtags
+hello from dev
+
+</code></pre>
+
+<p>but when we build with <code>go build --tags prod</code> and execute the binary,the output will be:</p>
+
+<pre><code>$ go build --tags prod
+$ ./buildtags
+hello from prod
+
+</code></pre>
+
+<p>As to the above example,we use the !prod to match our default env build.Also,we can setup different build tags for different environment,and specify the build tags with every build without default to make it more explicit.</p>
+
+<h2 id="eof">EOF</h2>
+
+            </div>
+            <footer class="article-footer">
+    <a data-url="http://littleworld.me/2016/10/18/golang-build-tags" data-id="51fc3169593de1d540828c38774a794d" class="article-share-link">
+        Share
+    </a>
+    
+    <a href="http://littleworld.me/2016/10/18/golang-build-tags/#disqus_thread" class="article-comment-link">
+        Comments
+    </a>
+    
+</footer>
+
+        </div>
+
+        
+<nav id="article-nav">
+    
+    <a href="http://littleworld.me/2016/10/16/redis-lock" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">
+          Older
+      </strong>
+      <div class="article-nav-title">Redis Lock</div>
+    </a>
+    
+
+    
 </nav>
 
-        </section>
-        <aside id="sidebar">
+
+    </article>
+
+    
+    <section id="comments">
+        <div id="disqus_thread">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'carbingun';
+    var disqus_identifier = 'http:\/\/littleworld.me\/2016\/10\/18\/golang-build-tags';
+    var disqus_title = 'golang build tags';
+    var disqus_url = 'http:\/\/littleworld.me\/2016\/10\/18\/golang-build-tags';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </section>
+    
+</section>
+
+
+	    
+	    <aside id="sidebar">
     
 <div class="widget-wrap">
     <h3 class="widget-title">
@@ -286,7 +533,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/18/golang-build-tags" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/go.jpeg)" alt="Poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/go.jpeg)" alt="golang build tags" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -311,7 +558,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/16/redis-lock" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="Poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="golang build tags" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -336,7 +583,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/14/redis-string-operations" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="Poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="golang build tags" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -361,7 +608,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/31/excel-export-by-poi" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="Poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="golang build tags" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -386,7 +633,7 @@
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/24/rabbitmq" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/RabbitMQ.png)" alt="Poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/RabbitMQ.png)" alt="golang build tags" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -562,7 +809,8 @@
     <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
 
-    </div>
+	    
+	</div>
 </div>
 
 <footer id="footer">
