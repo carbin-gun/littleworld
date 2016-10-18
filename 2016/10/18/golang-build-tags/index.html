@@ -44,7 +44,7 @@
 
 
 <meta itemprop="dateModified" content="2016-10-18T12:00:00&#43;08:00" />
-<meta itemprop="wordCount" content="566">
+<meta itemprop="wordCount" content="560">
 
 
 
@@ -278,7 +278,7 @@
             <i class="fa fa-calendar"></i>
             <time datetime="2016-10-18 12:00:00 &#43;0800 CST" itemprop="datePublished">2016-10-18</time>
             &middot;
-            566
+            560
             words
             &middot;
             3
@@ -338,13 +338,13 @@
 
 <li><p>A build constraint is evaluated as the OR of space-separated options; each option evaluates as the AND of its comma-separated terms; and each term is an alphanumeric word or, preceded by !, its negation. That is, the build constraint:</p>
 
-<pre><code class="language-golang">// +build linux,386 darwin,!cgo
+<pre><code>// +build linux,386 darwin,!cgo
 
 </code></pre>
 
 <p>corresponds to the boolean formula:</p>
 
-<pre><code class="language-golang">// +build (linux AND 386) OR (darwin AND (NOT cgo))`
+<pre><code>// +build (linux AND 386) OR (darwin AND (NOT cgo))
 </code></pre></li>
 
 <li><p>A file may have multiple build constraints. The overall constraint is the AND of the individual constraints. That is, the build constraints:</p>
@@ -360,7 +360,7 @@
 
 <li><p>If a file&rsquo;s name, after stripping the extension and a possible _test suffix, matches any of the following patterns:</p>
 
-<pre><code>*_GOOS
+<pre><code class="language-go">*_GOOS
 *_GOARCH
 *_GOOS_GOARCH
 </code></pre>
@@ -380,7 +380,7 @@
 <ul>
 <li><p>build the source for different platform.all the platforms defined by the <code>GOOS</code> and <code>GOARCH</code>are included by the <code>src/go/build/syslist.go</code>:</p>
 
-<pre><code>package build
+<pre><code class="language-golang">package build
 
 const goosList = &quot;android darwin dragonfly freebsd linux nacl netbsd openbsd plan9 solaris windows &quot;
 const goarchList = &quot;386 amd64 amd64p32 arm armbe arm64 arm64be ppc64 ppc64le mips mipsle mips64 mips64le mips64p32 mips64p32le ppc s390 s390x sparc sparc64 &quot;
@@ -399,49 +399,43 @@ const goarchList = &quot;386 amd64 amd64p32 arm armbe arm64 arm64be ppc64 ppc64l
 
 <p>main.go</p>
 
-<pre><code> ```golang
-package main
-
+<pre><code class="language-go">package main
+	
 import (
-    &quot;fanfu-golang/buildtags/lib&quot;
+	&quot;fanfu-golang/buildtags/lib&quot;
 )
 func main(){
-    lib.Tell()
+	lib.Tell()
 }
 
-```
 </code></pre>
 
 <p>lib/dev.go</p>
 
-<pre><code>```golang
-// +build !prod
-
+<pre><code class="language-go">// +build !prod
+	
 package lib
-
+	
 import &quot;fmt&quot;
-
+	
 func Tell(){
-    fmt.Println(&quot;hello from dev&quot;)
+	fmt.Println(&quot;hello from dev&quot;)
 }
 
-```
 </code></pre>
 
 <p>lib/prod.go</p>
 
-<pre><code>```golang
-// +build prod
-
+<pre><code class="language-golang">// +build prod
+	
 package lib
-
+	
 import &quot;fmt&quot;
-
+	
 func Tell(){
-    fmt.Println(&quot;hello from dev&quot;)
+	fmt.Println(&quot;hello from dev&quot;)
 }
 
-```
 </code></pre>
 
 <p>we can build with <code>go build</code> and execute.it will output.</p>
@@ -454,7 +448,7 @@ hello from dev
 
 <p>but when we build with <code>go build --tags prod</code> and execute the binary,the output will be:</p>
 
-<pre><code>$ go build --tags prod
+<pre><code class="language-bash">$ go build --tags prod
 $ ./buildtags
 hello from prod
 

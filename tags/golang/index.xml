@@ -35,13 +35,13 @@
 
 &lt;li&gt;&lt;p&gt;A build constraint is evaluated as the OR of space-separated options; each option evaluates as the AND of its comma-separated terms; and each term is an alphanumeric word or, preceded by !, its negation. That is, the build constraint:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-golang&#34;&gt;// +build linux,386 darwin,!cgo
+&lt;pre&gt;&lt;code&gt;// +build linux,386 darwin,!cgo
 
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;corresponds to the boolean formula:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-golang&#34;&gt;// +build (linux AND 386) OR (darwin AND (NOT cgo))`
+&lt;pre&gt;&lt;code&gt;// +build (linux AND 386) OR (darwin AND (NOT cgo))
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;A file may have multiple build constraints. The overall constraint is the AND of the individual constraints. That is, the build constraints:&lt;/p&gt;
@@ -57,7 +57,7 @@
 
 &lt;li&gt;&lt;p&gt;If a file&amp;rsquo;s name, after stripping the extension and a possible _test suffix, matches any of the following patterns:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;*_GOOS
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;*_GOOS
 *_GOARCH
 *_GOOS_GOARCH
 &lt;/code&gt;&lt;/pre&gt;
@@ -77,7 +77,7 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;build the source for different platform.all the platforms defined by the &lt;code&gt;GOOS&lt;/code&gt; and &lt;code&gt;GOARCH&lt;/code&gt;are included by the &lt;code&gt;src/go/build/syslist.go&lt;/code&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;package build
+&lt;pre&gt;&lt;code class=&#34;language-golang&#34;&gt;package build
 
 const goosList = &amp;quot;android darwin dragonfly freebsd linux nacl netbsd openbsd plan9 solaris windows &amp;quot;
 const goarchList = &amp;quot;386 amd64 amd64p32 arm armbe arm64 arm64be ppc64 ppc64le mips mipsle mips64 mips64le mips64p32 mips64p32le ppc s390 s390x sparc sparc64 &amp;quot;
@@ -96,49 +96,43 @@ const goarchList = &amp;quot;386 amd64 amd64p32 arm armbe arm64 arm64be ppc64 pp
 
 &lt;p&gt;main.go&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt; ```golang
-package main
-
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+	
 import (
-    &amp;quot;fanfu-golang/buildtags/lib&amp;quot;
+	&amp;quot;fanfu-golang/buildtags/lib&amp;quot;
 )
 func main(){
-    lib.Tell()
+	lib.Tell()
 }
 
-```
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;lib/dev.go&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;```golang
-// +build !prod
-
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// +build !prod
+	
 package lib
-
+	
 import &amp;quot;fmt&amp;quot;
-
+	
 func Tell(){
-    fmt.Println(&amp;quot;hello from dev&amp;quot;)
+	fmt.Println(&amp;quot;hello from dev&amp;quot;)
 }
 
-```
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;lib/prod.go&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;```golang
-// +build prod
-
+&lt;pre&gt;&lt;code class=&#34;language-golang&#34;&gt;// +build prod
+	
 package lib
-
+	
 import &amp;quot;fmt&amp;quot;
-
+	
 func Tell(){
-    fmt.Println(&amp;quot;hello from dev&amp;quot;)
+	fmt.Println(&amp;quot;hello from dev&amp;quot;)
 }
 
-```
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;we can build with &lt;code&gt;go build&lt;/code&gt; and execute.it will output.&lt;/p&gt;
@@ -151,7 +145,7 @@ hello from dev
 
 &lt;p&gt;but when we build with &lt;code&gt;go build --tags prod&lt;/code&gt; and execute the binary,the output will be:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ go build --tags prod
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ go build --tags prod
 $ ./buildtags
 hello from prod
 
