@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-    <title>excel export by poi &middot; Little World</title>
+    <title>zookeeper introduction with expiration explanation &middot; Little World</title>
     <meta name="generator" content="Hugo 0.17-DEV" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -18,14 +18,14 @@
     <link rel="stylesheet" href="http://littleworld.me/fancybox/jquery.fancybox.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-    <meta property="og:title" content="excel export by poi" />
-<meta property="og:description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+    <meta property="og:title" content="zookeeper introduction with expiration explanation" />
+<meta property="og:description" content="Introduction of Apache zookeeper,and some pitfalls from the session expiration expained here.
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://littleworld.me/2016/07/31/excel-export-by-poi" />
+<meta property="og:url" content="http://littleworld.me/2016/11/24/zookeeper-introduction-with-expiration-explanation" />
 
 
-<meta property="og:updated_time" content="2016-07-31T20:54:41&#43;08:00"/>
+<meta property="og:updated_time" content="2016-11-24T14:02:41&#43;08:00"/>
 
 
 
@@ -38,13 +38,13 @@
 
     
     
-<meta itemprop="name" content="excel export by poi">
-<meta itemprop="description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+<meta itemprop="name" content="zookeeper introduction with expiration explanation">
+<meta itemprop="description" content="Introduction of Apache zookeeper,and some pitfalls from the session expiration expained here.
 ">
 
 
-<meta itemprop="dateModified" content="2016-07-31T20:54:41&#43;08:00" />
-<meta itemprop="wordCount" content="775">
+<meta itemprop="dateModified" content="2016-11-24T14:02:41&#43;08:00" />
+<meta itemprop="wordCount" content="1425">
 
 
 
@@ -56,8 +56,8 @@
 
 
 
-<meta name="twitter:title" content="excel export by poi"/>
-<meta name="twitter:description" content="It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.
+<meta name="twitter:title" content="zookeeper introduction with expiration explanation"/>
+<meta name="twitter:description" content="Introduction of Apache zookeeper,and some pitfalls from the session expiration expained here.
 "/>
 <meta name="twitter:site" content="@cilendeng"/>
 
@@ -264,24 +264,24 @@
     <article id="page-undefined" class="article article-type-page" itemscope="" itemprop="blogPost">
         <div class="article-inner">
             
-                <img src="http://littleworld.me/banners/writing-desk.png" class="article-banner">
+                <img src="http://littleworld.me/banners/zk.jpg" class="article-banner">
             
 
             <header class="article-header">
-    <a href="http://littleworld.me/2016/07/31/excel-export-by-poi">
+    <a href="http://littleworld.me/2016/11/24/zookeeper-introduction-with-expiration-explanation">
     <h1 class="article-title" itemprop="name">
-        excel export by poi
+        zookeeper introduction with expiration explanation
     </h1>
     </a>
     <div class="article-meta">
         <div class="article-date">
             <i class="fa fa-calendar"></i>
-            <time datetime="2016-07-31 20:54:41 &#43;0800 CST" itemprop="datePublished">2016-07-31</time>
+            <time datetime="2016-11-24 14:02:41 &#43;0800 CST" itemprop="datePublished">2016-11-24</time>
             &middot;
-            775
+            1425
             words
             &middot;
-            4
+            7
             minute read
         </div>
 
@@ -305,7 +305,7 @@
             <div class="article-category">
                 <i class="fa fa-tags"></i>
                 
-                <a class="article-category-link" href="http://littleworld.me/tags/poi">poi</a>
+                <a class="article-category-link" href="http://littleworld.me/tags/zookeeper">zookeeper</a>
                 
                 
             </div>
@@ -317,99 +317,189 @@
             <div class="article-entry" itemprop="articleBody">
                 
 
-<p>It&rsquo;s a online optimization for Excel export which might be a common demand, I will demonstrate the resolve thoughts , concrete problems , abstraction and the final result in this post.</p>
+<p>Introduction of Apache zookeeper,and some pitfalls from the session expiration expained here.</p>
 
-<h2 id="background">Background</h2>
+<h1 id="zookeeper">Zookeeper</h1>
 
-<p>Recently,I&rsquo;ve been accepted a task from my boss about the excel export from our sites. The problem is summarized into two major problems as followed:</p>
+<h2 id="start">Start</h2>
 
-<ul>
-<li>The download is slow.</li>
-<li>Sometimes it will cause the JVM to crash.</li>
-</ul>
+<pre><code>zkServer.sh start
 
-<h2 id="process">Process</h2>
-
-<p>After digging into the code ,I&rsquo;ve found we used the <code>poi</code> lib from <code>Apache</code>, and there were some serious issues where were confronted with:</p>
-
-<ul>
-<li>JPA query,As for the high-level abstracted ORM tools,that may be a common problem ,the domain-driven code for database query.which may result in too many database queries.bingo, that&rsquo;s where we were.</li>
-<li>we used <code>XSSFWorkbook</code> class to create the Excel sheet,which carried all the objects in memory that will cause <code>OOM</code> when the excel is too large.</li>
-</ul>
-
-<h2 id="concrete-problems">Concrete Problems</h2>
-
-<h3 id="sql">SQL</h3>
-
-<p>As for JPA ,it is a wrapper of Hibernate which do generate all the SQL behind,you can reduce your focus on the business domain and logic.but sometimes it will not be a good choice to use it in a simple way.
-for example,if there&rsquo;s a table(table <code>A</code>) in the database ,and a column as another table&rsquo;s id(table <code>B</code>). at the same time, you abstract the two into an Entity and a field. which can be expressed as followed:</p>
-
-<pre><code> class B{
-    private A xxx
- }
- class A{
- }
 </code></pre>
 
-<p>in this way, the JPA will do the query sent from B as a sequence of :</p>
+<h2 id="config">Config</h2>
 
-<pre><code> 1. query from table B ,filter all the rows by relevant conditions.
- 2. query from table A by id ,from the above queries result.
+<ul>
+<li>config location, <code>conf/zoo.cf</code> by default.contents of the config file.</li>
+<li>** tickTime **, It is used to do heartbeats and the minimum session timeout will be twice the tickTime.</li>
+<li>** dataDir **, the location to store the in-memory database snapshots and, unless specified otherwise, the transaction log of updates to the database.</li>
+<li>** clientPort **, the port to listen for client connections.</li>
+</ul>
+
+<h2 id="connect">Connect</h2>
+
+<ul>
+<li>by <code>zkCli.sh -server 127.0.0.1:2181</code>,or because the <code>127.0.0.1:2181</code> is the default server,we can do it by just <code>zkCli.sh</code> by default. the <code>zkCli.sh</code> is located in the <code>ZK_PATH/bin/</code> directory.</li>
+</ul>
+
+<h2 id="commands">Commands</h2>
+
+<ul>
+<li><code>ls</code> , <code>ls /</code> or <code>ls /xxx/yyy</code> command to see what the directory looks like.</li>
+<li><code>create</code>, <code>create /zk_test my_data</code>,this creates a new znode(ie. /zk_test) and associates the string &ldquo;my_data&rdquo; with the node.</li>
+<li><code>get</code> , <code>get /zk_test</code>,this returns the data which was associated with the znode .</li>
+<li><code>set</code> , <code>set /zk_test new_data</code> ,this will modify the data associated with zk_test from my_data to new_data.</li>
+<li><code>delete</code>, <code>delete /zk_test</code> ,this will delete the node zk_test.</li>
+</ul>
+
+<h2 id="cluster">Cluster</h2>
+
+<ul>
+<li>a minimum of three servers are required for clustering.</li>
+<li>it&rsquo;s strongly recommended that you have an odd number of servers.</li>
+
+<li><p>cluster config file example</p>
+
+<pre><code class="language-bash">tickTime=2000
+dataDir=/var/lib/zookeeper
+clientPort=2181
+initLimit=5
+syncLimit=2
+server.1=zoo1:2888:3888
+server.2=zoo2:2888:3888
+server.3=zoo3:2888:3888
+</code></pre></li>
+
+<li><p>the <code>initLimit</code> is timeouts zookeeper uses to limit the length of time the zookeeper servers in quorum have to connect to a leader.</p></li>
+
+<li><p>the <code>syncLimit</code> limits timeout interval for messaging between leader and followers,it is n times of the tickTime. for the above setting,the syncLimit is 2*2000=4000ms.</p></li>
+
+<li><p>both <code>initLimit</code> and <code>syncLimit</code> use the unit of time based on <code>tickTime</code>, <code>initLimit</code> is <code>5*2000ms</code> and <code>syncLimit</code> is <code>2*2000ms</code>.</p></li>
+
+<li><p><code>server.x</code>list the servers  that make up the zookeeper service. When the server starts up, it knows which server it is by looking for the file <code>myid</code> in the data directory. That file has the contains the server number, in ASCII.</p></li>
+
+<li><p><code>server.x=zoo1:2888:3888</code>,the server ports of 2888 and 3888 meanings: peers use the former port to connect to other peers.Such a connection is necessary so that peers can communicate. the second port is for leader election.</p></li>
+</ul>
+
+<h2 id="ephemeral-node">Ephemeral Node</h2>
+
+<ul>
+<li>the ephemeral znode will be automatically deleted when a session expires or when the client disconnects.</li>
+<li>it can be created with the <code>create</code> command with the <code>-e</code> flag.</li>
+<li><em>No any children nodes can be added into <code>Ephemeral node</code></em>.</li>
+
+<li><p>example:</p>
+
+<pre><code class="language-bash">create -e /hello &quot;hellonode&quot;
+//when the client disconnects or the session expires,the znode will be removed.
+</code></pre></li>
+
+<li><p><strong>the node is not removed instantly with the client disconnection,it is detected by the session expiration</strong>.</p></li>
+</ul>
+
+<h2 id="four-letter-word-command">Four Letter Word Command</h2>
+
+<ul>
+<li><p>ZooKeeper responds to a small set of commands. Each command is composed of four letters. You issue the commands to ZooKeeper via telnet or nc, at the client port.</p></li>
+
+<li><p>Command list:</p>
+
+<ul>
+<li><code>conf</code>, Print details about serving configuration.</li>
+<li><code>cons</code>, List full connection/session details for all clients connected to this server. Includes information on numbers of packets received/sent, session id, operation latencies, last operation performed, etc.</li>
+<li><code>crst</code>,client-reset, Reset connection/session statistics for all connections.</li>
+<li><code>srst</code>,server-reset, Reset server statistics.</li>
+<li><code>dump</code>, Lists the outstanding sessions and ephemeral nodes. <strong>This only works on the leader</strong>.</li>
+<li><code>envi</code>, Print details about serving environment.</li>
+<li><code>ruok</code>, Tests if server is running in a non-error state. The server will respond with imok if it is running. Otherwise it will not respond at all.</li>
+<li><code>srvr</code>, Lists full details for the server.</li>
+<li><code>stat</code>,Lists brief details for the server and connected clients.</li>
+<li><code>wchs</code>, Lists brief information on watches for the server.</li>
+<li><code>wchc</code>, Lists detailed information on watches for the server, by session. This outputs a list of sessions(connections) with associated watches (paths). Note, depending on the number of watches this operation may be expensive (ie impact server performance), use it carefully.`</li>
+<li><code>dirs</code> (version&gt;=3.5.1),Shows the total size of snapshot and log files in bytes.</li>
+<li><code>wchp</code>, Lists detailed information on watches for the server, by path. This outputs a list of paths (znodes) with associated sessions. Note, depending on the number of watches this operation may be expensive (ie impact server performance), use it carefully.</li>
+<li><code>mntr</code>, Outputs a list of variables that could be used for monitoring the health of the cluster.</li>
+<li><code>isro</code>,  Tests if server is running in read-only mode. The server will respond with &ldquo;ro&rdquo; if in read-only mode or &ldquo;rw&rdquo; if not in read-only mode.</li>
+<li><code>gtmk</code>,Gets the current trace mask as a 64-bit signed long value in decimal format. See stmk for an explanation of the possible values.</li>
+<li><code>stmk</code>, Sets the current trace mask. The trace mask is 64 bits, where each bit enables or disables a specific category of trace logging on the server. Log4J must be configured to enable TRACE level first in order to see trace logging messages. The bits of the trace mask correspond to the following trace logging categories.
+<br /></li>
+</ul>
+
+<pre><code>    0b0000000000    Unused, reserved for future use.
+    0b0000000010    Logs client requests, excluding ping requests.
+    0b0000000100    Unused, reserved for future use.
+    0b0000001000    Logs client ping requests.
+    0b0000010000    Logs packets received from the quorum peer that is the current leader, excluding ping requests.
+    0b0000100000    Logs addition, removal and validation of client sessions.
+    0b0001000000    Logs delivery of watch events to client sessions.
+    0b0010000000    Logs ping packets received from the quorum peer that is the current leader.
+    0b0100000000    Unused, reserved for future use.
+    0b1000000000    Unused, reserved for future use.
+        
 </code></pre>
 
-<p>for queries like this,small amount of query ,it will be acceptable.But when the queried rows from the 1st query reaches some quantity,the interaction between the application server and the database will cause performance problems.</p>
-
-<h3 id="poi">POI</h3>
-
-<p><code>POI</code> is a mature lib from Apache. but for different demand ,there can be different implementations for excel generation.</p>
-
 <ul>
-<li>HSSF , for the Excel &lsquo;97(-2007) file format.</li>
-<li>XSSF,  for the Excel 2007 OOXML (.xlsx) file format ,which uses XML as the underground implementation as the excel archive.</li>
-<li>SXSSF, compatible with the XSSF,but SXSSF achieves its low memory footprint by limiting access to the rows that are within a sliding window, while XSSF gives access to all rows in the document. Older rows that are no longer in the window become inaccessible, as they are written to the disk.
-apparently ,from the display above,we can draw a safe conclusion: ** we should use SXSSF **, because we didn&rsquo;t know how much rows it will be generated by limited queries,we must limit the memory access for safety.</li>
+<li>All remaining bits in the 64-bit value are unused and reserved for future use. Multiple trace logging categories are specified by calculating the bitwise OR of the documented values. The default trace mask is 0b0100110010. Thus, by default, trace logging includes client requests, packets received from the leader and sessions.To set a different trace mask, send a request containing the stmk four-letter word followed by the trace mask represented as a 64-bit signed long value. This example uses the Perl pack function to construct a trace mask that enables all trace logging categories described above and convert it to a 64-bit signed long value with big-endian byte order. The result is appended to stmk and sent to the server using netcat. The server responds with the new trace mask in decimal format.</li>
 </ul>
 
-<h2 id="resolve">Resolve</h2>
+<pre><code class="language-bash">        $ perl -e &quot;print 'stmk', pack('q&gt;', 0b0011111010)&quot; | nc localhost 2181
+        250
+</code></pre></li>
 
-<ul>
-<li>Replace all the ORM query with <code>native sql</code> to accelerate the SQL query speed.which may not be that handy for ORM mapping tool.but as for speed, it is an overwhelming winner for <code>SQL</code> to ORM.</li>
-<li>use the <code>SXSSWorkbook</code> as an replacement for <code>XSSFWorkbook</code> which will reduce the memory footprint dramatically.</li>
+<li><p>New in 3.5.0: The AdminServer is an embedded Jetty server that provides an HTTP interface to the four letter word commands. By default, the server is started on port 8080, and commands are issued by going to the URL &ldquo;/commands/[command name]&ldquo;, e.g., <a href="http://localhost:8080/commands/stat">http://localhost:8080/commands/stat</a>. The command response is returned as JSON. Unlike the original protocol, commands are not restricted to four-letter names, and commands can have multiple names; for instance, &ldquo;stmk&rdquo; can also be referred to as &ldquo;set_trace_mask&rdquo;. To view a list of all available commands, point a browser to the URL /commands (e.g., <a href="http://localhost:8080/commands">http://localhost:8080/commands</a>). See the AdminServer configuration options for how to change the port and URLs.</p></li>
 </ul>
 
-<h2 id="further-more">Further More</h2>
+<p>The AdminServer is enabled by default, but can be disabled by either:</p>
+
+<p>Setting the zookeeper.admin.enableServer system property to false.
+Removing Jetty from the classpath. (This option is useful if you would like to override ZooKeeper&rsquo;s jetty dependency.)
+Note that the TCP four letter word interface is still available if the AdminServer is disabled.</p>
+
+<h2 id="expiration-with-pitfalls">Expiration With Pitfalls</h2>
 
 <ul>
-<li><p>Isolate the excel server with other servers.As is known ,The excel process will generate a large amount of temp objects,which will affect the online performance that will result in latency of other online request. so Isolation is a good choice. Which can be down in some ways:</p>
+<li>the client is not removed instantly ,that&rsquo;s why the <code>tickTime</code>, <code>initLimit</code> and <code>syncLimit</code> exists.</li>
 
-<ul>
-<li>configure universal URI for excels,then you can configure the PROXY at the NGINX layer to specified machines.</li>
-<li>configure a sub-domain,then as for the URL,you can write as <code>//subdomain/xxx</code>(don&rsquo;t touch the protocol,the browser will adapt it no matter it is http or https),you just modify the domain of the request URL. and configure the subdomain proxy at the NGINX.</li>
-</ul></li>
+<li><p>about the expiration and client state transitions: described here:</p>
 
-<li><p>configure the Database query to a slave database instead of the master one, because the query may bring some pressure to the database that may cause the sync latency rising between master database and the slave ones and of course the performance problems which will affect other database operations.</p></li>
+<blockquote>
+<p><a href="http://zookeeper.apache.org/doc/r3.4.8/zookeeperProgrammers.html#ch_zkSessions">http://zookeeper.apache.org/doc/r3.4.8/zookeeperProgrammers.html#ch_zkSessions</a></p>
+</blockquote></li>
 
-<li><p>a little improvement by object sharing. for our export,there will be many Date object .I do some object sharing in the request by a <code>HashMap</code>,I can get a formatted Date String by a <code>Get</code> but not a <code>FastDateFormat</code> which will be much faster and reduce the memory footprint.</p></li>
+<li><p>the session timeout is negotiated by the client and the server.the server provides a session timeout range.the minimum and the maxmum.the minimum is <code>2*tickTime</code> and the maximum is <code>20*syncLimit*tickTime</code>.if the client specify a value,the server will respond according to the client value:</p>
+
+<pre><code class="language-bash">clientTimeout&lt;minimum ,return the minimum 
+clientTimeout&gt;=minimum &amp;&amp; clientTimeout&lt;=maximum,return clientTimeout
+clientTimeout&gt; maximum,return maximum
+</code></pre></li>
+
+<li><p><strong>the session timeout negotiated by the server and the client will finally work on some senarios,like the ephemeral znode removal.If the session timeout val is too small,the ephemeral znode might be removed due to the network unstability.If the timeout val is too big,after the connection was lost,the znode will still be visible for other clients for a relatively long time.so the time should be set carefully</strong>.</p></li>
+
+<li><p>the <code>zkCli.sh</code> can specify the client session timeout value to negotiate with the server with the flag <code>-timeout</code>.
+example:</p>
+
+<pre><code class="language-bash">    $ ./zkCli.sh -timeout 1000
+    ...
+    2016-10-23 23:10:32,046 [myid:] - INFO  [main:ZooKeeper@438] - Initiating client connection, connectString=localhost:2181 sessionTimeout=1000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@3d555cf5
+Welcome to ZooKeeper!
+2016-10-23 23:10:32,066 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1032] - Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+JLine support is enabled
+2016-10-23 23:10:32,073 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@876] - Socket connection established to localhost/127.0.0.1:2181, initiating session
+2016-10-23 23:10:32,083 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1299] - Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x157f21695650000, negotiated timeout = 4000
+</code></pre></li>
 </ul>
 
-<h2 id="result">Result</h2>
+<hr />
 
-<p>The Excel can be generated and exported into client in a short period. And with the isolation with other online servers,we can ignore the impact by the excel-export to our online business and the latency.</p>
-
-<h2 id="tips">Tips</h2>
-
-<ul>
-<li>Don&rsquo;t forget to invoke poi&rsquo;s <code>dispose</code> after the whole process. Otherwise,there will be a lot of temp files on your server.</li>
-<li>Prepare the excel header row in advance which is better for speed.</li>
-</ul>
+<h1 id="eof">EOF</h1>
 
             </div>
             <footer class="article-footer">
-    <a data-url="http://littleworld.me/2016/07/31/excel-export-by-poi" data-id="ea50b88b5063f74efc850118c4307e8c" class="article-share-link">
+    <a data-url="http://littleworld.me/2016/11/24/zookeeper-introduction-with-expiration-explanation" data-id="3171080ae1e6f33f6e1ff60e51d228b6" class="article-share-link">
         Share
     </a>
     
-    <a href="http://littleworld.me/2016/07/31/excel-export-by-poi/#disqus_thread" class="article-comment-link">
+    <a href="http://littleworld.me/2016/11/24/zookeeper-introduction-with-expiration-explanation/#disqus_thread" class="article-comment-link">
         Comments
     </a>
     
@@ -420,21 +510,14 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
         
 <nav id="article-nav">
     
-    <a href="http://littleworld.me/2016/07/24/rabbitmq" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="http://littleworld.me/2016/10/18/golang-build-tags" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">
           Older
       </strong>
-      <div class="article-nav-title">RabbitMQ</div>
+      <div class="article-nav-title">golang build tags</div>
     </a>
     
 
-    
-    <a href="http://littleworld.me/2016/10/14/redis-string-operations" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">
-          Newer
-      </strong>
-      <div class="article-nav-title">redis string operations</div>
-    </a>
     
 </nav>
 
@@ -447,9 +530,9 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
             <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'carbingun';
-    var disqus_identifier = 'http:\/\/littleworld.me\/2016\/07\/31\/excel-export-by-poi';
-    var disqus_title = 'excel export by poi';
-    var disqus_url = 'http:\/\/littleworld.me\/2016\/07\/31\/excel-export-by-poi';
+    var disqus_identifier = 'http:\/\/littleworld.me\/2016\/11\/24\/zookeeper-introduction-with-expiration-explanation';
+    var disqus_title = 'zookeeper introduction with expiration explanation';
+    var disqus_url = 'http:\/\/littleworld.me\/2016\/11\/24\/zookeeper-introduction-with-expiration-explanation';
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -479,7 +562,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/11/24/zookeeper-introduction-with-expiration-explanation" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/zk.jpg)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/zk.jpg)" alt="zookeeper introduction with expiration explanation" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -504,7 +587,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/18/golang-build-tags" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/go.jpeg)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/go.jpeg)" alt="zookeeper introduction with expiration explanation" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -529,7 +612,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/16/redis-lock" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="zookeeper introduction with expiration explanation" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -554,7 +637,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/10/14/redis-string-operations" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/redis.jpg)" alt="zookeeper introduction with expiration explanation" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
@@ -579,7 +662,7 @@ apparently ,from the display above,we can draw a safe conclusion: ** we should u
                 <div class="item-thumbnail">
                     <a href="http://littleworld.me/2016/07/31/excel-export-by-poi" class="thumbnail">
                     
-                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="excel export by poi" class="thumbnail-image"></span>
+                        <span style="background-image:url(http://littleworld.me/banners/writing-desk.png)" alt="zookeeper introduction with expiration explanation" class="thumbnail-image"></span>
                     
                     </a>
                 </div>
