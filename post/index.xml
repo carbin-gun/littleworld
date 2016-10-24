@@ -189,6 +189,37 @@ JLine support is enabled
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h2 id=&#34;ephemeral-node-creation&#34;&gt;Ephemeral Node Creation&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;pattern should be like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;try {
+  zk.delete(path)
+} catch {
+  e: NoNodeException =&amp;gt; // do nothing
+}
+    
+zk.create(path, data, CreateMode.EPHEMERAL)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;we can&amp;rsquo;t do like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;try {
+zk.create(path, data, CreateMode.EPHEMERAL)
+} catch {
+// The ephemeral node hasn&#39;t been deleted yet.
+e: NodeExistsException =&amp;gt; zk.set(path, data)
+}
+    
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The above way ,in some senario like system quick restart,the create may fail because the before node hasn&amp;rsquo;t been removed,but after some period of time,the node will be removed.the reason is:&lt;strong&gt;if you didn&amp;rsquo;t create the ephemeral node in your session, your session doesn&amp;rsquo;t own the node, so when the owning session expires, the node will be deleted&lt;/strong&gt;. Apparently,the newly session did not own the ephemeral node.so the bug showed up.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;blog explained:
+&amp;gt; &lt;a href=&#34;https://blog.box.com/blog/a-gotcha-when-using-zookeeper-ephemeral-nodes/&#34;&gt;https://blog.box.com/blog/a-gotcha-when-using-zookeeper-ephemeral-nodes/&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;hr /&gt;
 
 &lt;h1 id=&#34;eof&#34;&gt;EOF&lt;/h1&gt;

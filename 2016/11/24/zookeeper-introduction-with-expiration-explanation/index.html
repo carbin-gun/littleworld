@@ -44,7 +44,7 @@
 
 
 <meta itemprop="dateModified" content="2016-11-24T14:02:41&#43;08:00" />
-<meta itemprop="wordCount" content="1425">
+<meta itemprop="wordCount" content="1550">
 
 
 
@@ -278,10 +278,10 @@
             <i class="fa fa-calendar"></i>
             <time datetime="2016-11-24 14:02:41 &#43;0800 CST" itemprop="datePublished">2016-11-24</time>
             &middot;
-            1425
+            1550
             words
             &middot;
-            7
+            8
             minute read
         </div>
 
@@ -487,6 +487,37 @@ JLine support is enabled
 2016-10-23 23:10:32,073 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@876] - Socket connection established to localhost/127.0.0.1:2181, initiating session
 2016-10-23 23:10:32,083 [myid:] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1299] - Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x157f21695650000, negotiated timeout = 4000
 </code></pre></li>
+</ul>
+
+<h2 id="ephemeral-node-creation">Ephemeral Node Creation</h2>
+
+<ul>
+<li><p>pattern should be like this:</p>
+
+<pre><code class="language-java">try {
+  zk.delete(path)
+} catch {
+  e: NoNodeException =&gt; // do nothing
+}
+    
+zk.create(path, data, CreateMode.EPHEMERAL)
+</code></pre></li>
+
+<li><p>we can&rsquo;t do like this:</p>
+
+<pre><code class="language-java">try {
+zk.create(path, data, CreateMode.EPHEMERAL)
+} catch {
+// The ephemeral node hasn't been deleted yet.
+e: NodeExistsException =&gt; zk.set(path, data)
+}
+    
+</code></pre></li>
+
+<li><p>The above way ,in some senario like system quick restart,the create may fail because the before node hasn&rsquo;t been removed,but after some period of time,the node will be removed.the reason is:<strong>if you didn&rsquo;t create the ephemeral node in your session, your session doesn&rsquo;t own the node, so when the owning session expires, the node will be deleted</strong>. Apparently,the newly session did not own the ephemeral node.so the bug showed up.</p></li>
+
+<li><p>blog explained:
+&gt; <a href="https://blog.box.com/blog/a-gotcha-when-using-zookeeper-ephemeral-nodes/">https://blog.box.com/blog/a-gotcha-when-using-zookeeper-ephemeral-nodes/</a></p></li>
 </ul>
 
 <hr />
